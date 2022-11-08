@@ -14,6 +14,7 @@ class puestos extends AW
     var $estatus;
     var $id_departamento;
     var $user_id;
+    var $id_puesto;
 
 
     public function __construct($sesion = true, $datos = NULL)
@@ -46,7 +47,7 @@ class puestos extends AW
         }
 
         $sql = "select a.*, b.nombre as departamento FROM puestos as a join  departamentos as b on a.id_departamento = b.id where 1=1 {$sqlForm} {$sqlPuesto}";
-
+        
         return $this->Query($sql);
     }
 

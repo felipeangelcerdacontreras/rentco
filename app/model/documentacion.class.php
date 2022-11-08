@@ -14,10 +14,12 @@ class documentacion extends AW
     var $id_proceso;
     var $id_tipo_documento;
     var $id_departamento;
+    var $id_puesto;
     var $clave_calidad;
     var $nombre;
     var $url_word;
     var $url_pdf;
+    var $comentarios;
     var $fecha_creacion;
     var $fecha_actualizacion;
     var $user_id;
@@ -90,7 +92,7 @@ class documentacion extends AW
         }
 
         $sql = "SELECT a.id,a.fecha_creacion, a.fecha_actualizacion, b.nombre as estatus_nombre, c.nombre as proceso, 
-        d.nombre as tipo_documento, e.nombre as departamento, a.clave_calidad, a.nombre, a.url_word,a.url_pdf FROM documentacion as a
+        d.nombre as tipo_documento, e.nombre as departamento, a.clave_calidad, a.nombre, a.url_word,a.url_pdf, a.id_puesto FROM documentacion as a
         left join estatus_documento as b on a.id_estatus = b.id
         left join proceso as c on a.id_proceso = c.id
         left join documento as d on a.id_tipo_documento = d.id
@@ -150,6 +152,13 @@ class documentacion extends AW
 
     public function Actualizar()
     {
+        $sPuestos = "";
+        if (! empty($this->id_puesto)) {
+            foreach ($this->id_puesto as $idx => $valor) {
+                $sPuestos .= $valor . "@";
+            }
+        }
+
         $sql = "UPDATE `mli`.`documentacion`
         SET
         `id` = '{$this->id}',
@@ -157,10 +166,10 @@ class documentacion extends AW
         `id_proceso` = '{$this->id_proceso}',
         `id_tipo_documento` = '{$this->id_tipo_documento}',
         `id_departamento` = '{$this->id_departamento}',
+        `id_puesto` = '{$sPuestos}',
         `clave_calidad` = '{$this->clave_calidad}',
         `nombre` = '{$this->nombre}',
-        `url_word` = '{$this->url_word}',
-        `url_pdf` = '{$this->url_pdf}',
+        `comentarios` = '{$this->comentarios}',
         `fecha_actualizacion` = now(),
         `usr_modificacion` = '{$this->user_id}'
         WHERE `id` = '{$this->id}'";
@@ -171,7 +180,7 @@ class documentacion extends AW
             $sqlBitacora = "INSERT INTO `bitacora`
                                     (`id`,`modulo`,`operacion`,`modificacion`,`url_pdf`,`url_word`,`usuario`,`fecha`)
                                     VALUES
-                                    ('0','DOCUMENTACION','ACTUALIZACION','(Proceso: {$this->id_proceso}°Tipo documento: {$this->id_tipo_documento}°Departamento: {$this->id_departamento}°Clave calidad: {$this->clave_calidad}°Nombre: {$this->nombre})',NULL,NULL,'{$this->user_id}',NOW())";
+                                    ('0','DOCUMENTACION','ACTUALIZACION','(Proceso: {$this->id_proceso}°Tipo documento: {$this->id_tipo_documento}°Departamento: {$this->id_departamento}°Clave calidad: {$this->clave_calidad}°Nombre: {$this->nombre}°Comentarios: {$this->comentarios})',NULL,NULL,'{$this->user_id}',NOW())";
 
             $this->NonQuery($sqlBitacora);
         }
@@ -180,13 +189,20 @@ class documentacion extends AW
     }
 
     public function Agregar()
-    {
+    {   
+        $sPuestos = "";
+        if (! empty($this->id_puesto)) {
+            foreach ($this->id_puesto as $idx => $valor) {
+                $sPuestos .= $valor . "@";
+            }
+        }
+
         $sql = "INSERT INTO `documentacion`
-        (`id`,`id_estatus`,`id_proceso`,`id_tipo_documento`,`id_departamento`,`clave_calidad`,
-        `nombre`,`fecha_creacion`,`usr_creacion`,`estatus`)
+        (`id`,`id_estatus`,`id_proceso`,`id_tipo_documento`,`id_departamento`,`id_puesto`,`clave_calidad`,
+        `nombre`,`comentarios`,`fecha_creacion`,`usr_creacion`,`estatus`)
         VALUES
-        (0,'{$this->id_estatus}','{$this->id_proceso}','{$this->id_tipo_documento}','{$this->id_departamento}',
-        '{$this->clave_calidad}','{$this->nombre}',now(),
+        (0,'{$this->id_estatus}','{$this->id_proceso}','{$this->id_tipo_documento}','{$this->id_departamento}','{$sPuestos}',
+        '{$this->clave_calidad}','{$this->nombre}','{$this->comentarios}','".$this->fecha_creacion."',
         '{$this->user_id}','1');";
 
         $bResultado = $this->NonQuery($sql);
@@ -195,7 +211,7 @@ class documentacion extends AW
             $sqlBitacora = "INSERT INTO `bitacora`
                                     (`id`,`modulo`,`operacion`,`modificacion`,`url_pdf`,`url_word`,`usuario`,`fecha`)
                                     VALUES
-                                    ('0','DOCUMENTACION','AGREGADO','(Proceso: {$this->id_proceso}°Tipo documento: {$this->id_tipo_documento}° Departamento: {$this->id_departamento}°Clave calidad: {$this->clave_calidad}°Nombre: {$this->nombre})',NULL,NULL,'{$this->user_id}',NOW())";
+                                    ('0','DOCUMENTACION','AGREGADO','(Proceso: {$this->id_proceso}°Tipo documento: {$this->id_tipo_documento}° Departamento: {$this->id_departamento}°Puestos: {$sPuestos}°Clave calidad: {$this->clave_calidad}°Nombre: {$this->nombre}°Comentarios: {$this->comentarios}°Fecha creacion: {$this->fecha_creacion})',NULL,NULL,'{$this->user_id}',NOW())";
 
             $this->NonQuery($sqlBitacora);
 
@@ -274,7 +290,7 @@ class documentacion extends AW
                 $nomArchivoTemp = explode(".", $archivo['name']);
                 $extArchivo = strtoupper(trim(end($nomArchivoTemp)));
 
-                if (!($extArchivo == "DOC" || $extArchivo == "DOCX")) { // si no es igual a word
+                if (!($extArchivo == "DOC" || $extArchivo == "DOCX" || $extArchivo == "XLSX" || $extArchivo == "VSDX")) { // si no es igual a word
                     return 2;
                 }
 

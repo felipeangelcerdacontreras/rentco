@@ -13,7 +13,9 @@ $lstdepartamentos = $oDepartamentos->Listado();
 ?>
 <script type="text/javascript">
     $(document).ready(function(e) {
-        $("#dataTable").DataTable();
+        $("#dataTable").DataTable({
+            scrollY: '300px'
+        });
 
         $("#btnAgregar").button().click(function(e) {
             Editar("", "Agregar");
@@ -40,11 +42,6 @@ $lstdepartamentos = $oDepartamentos->Listado();
                         <th style="width: 10%;">Acciones</th>
                     </tr>
                 </thead>
-                <tfoot>
-                    <th>Nombre</th>
-                    <th>Estatus</th>
-                    <th>Acciones</th>
-                </tfoot>
                 <tbody>
                     <?php
                     if (count($lstdepartamentos) > 0) {

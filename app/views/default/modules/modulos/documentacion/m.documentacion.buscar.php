@@ -184,12 +184,6 @@ $fecha_actual = date("d-m-Y");
                     backdrop: "true"
                 });
                 break;
-
-                //$('#iframepdf').get(0).contentWindow.focus();
-                //$("#iframepdf").get(0).contentWindow.print();
-                //window.parent.iframepdf.focus();  // main es el nombre del iframe (o el nombre del iframe o frame que asignes.
-		        //window.print();
-                break;
         }
     }
 </script>
@@ -301,7 +295,9 @@ $fecha_actual = date("d-m-Y");
                                                 <select id="id_departamento_" description="Seleccione el puesto" class="form-control" name="id_departamento_">
                                                     <?php
                                                     if (count($lstDepartamentos) > 0) {
-                                                        echo "<option value='0' >-- SELECCIONE --</option>\n";
+                                                        if ($sesion->nvl_usuario <= 1) {
+                                                            echo "<option value='0' >-- SELECCIONE --</option>\n";
+                                                        }
                                                         foreach ($lstDepartamentos as $idx => $campo) {
                                                             if ($sesion->nvl_usuario > 1) {
                                                                 if ($campo->id == $lstPuestos[0]->id_departamento) {
@@ -311,6 +307,7 @@ $fecha_actual = date("d-m-Y");
                                                                 echo "<option value='{$campo->id}' >{$campo->nombre}</option>\n";
                                                             }
                                                         }
+                                                    
                                                     }
                                                     ?>
                                                 </select>
@@ -368,11 +365,6 @@ $fecha_actual = date("d-m-Y");
                 </div>
             </div>
             <!-- Modal -->
-
-            <div>
-                <iframe id="iframepdf" src=""></iframe>
-            </div>
-
 
             <!-- archivo Footer -->
             <?php require_once('app/views/default/footer.php'); ?>

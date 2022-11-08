@@ -91,6 +91,24 @@ class AW extends database
         return $bExiste;
     }
 
+    public function ExisteP($permiso, $arreglo)
+    {
+        $bExiste = false;
+
+        if ($arreglo && count($arreglo) > 0) {
+            foreach ($arreglo as $idx => $valor) {
+                foreach ($permiso as $idx => $val) {
+                    print_r($val." === ".$permiso);
+                    if ($val === $permiso) {
+                        $bExiste = true;
+                        break;
+                    }
+                }
+            }
+        }
+        return $bExiste;
+    }
+
     public function InfoUsuario($usr_nombre)
     {
         $sql = "select * from usuarios
@@ -128,4 +146,3 @@ class AW extends database
     }
 
 }
-?>

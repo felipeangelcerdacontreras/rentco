@@ -12,6 +12,7 @@ require_once($_SITE_PATH . "app/model/estatus_documento.class.php");
 require_once($_SITE_PATH . "app/model/documento.class.php");
 require_once($_SITE_PATH . "app/model/proceso.class.php");
 require_once($_SITE_PATH . "app/model/departamentos.class.php");
+require_once($_SITE_PATH . "app/model/puestos.class.php");
 
 $oDocumentacion = new documentacion();
 $sesion = $_SESSION[$oDocumentacion->NombreSesion];
@@ -35,13 +36,27 @@ $lstProceso = $oProceso->Listado();
 
 $oDepartamentos = new departamentos();
 $oDepartamentos->form = '1';
+if ($sesion->nvl_usuario > 1) {
+    $oPuestos2 = new puestos();
+    $oPuestos2->form = '1';
+    $oPuestos2->id_puesto = $sesion->puesto;
+    $lstpuestos2 = $oPuestos2->Listado();
+    $oDepartamentos->id = $lstpuestos2[0]->id_departamento;
+}
 $lstDepartamentos = $oDepartamentos->Listado();
 
 $oUsuarios = new Usuarios();
 $oUsuarios->id = $sesion->id;
 $oUsuarios->Informacion();
 
-$aPermisos = empty($oUsuarios->perfiles_id) ? array() : explode("@", $oUsuarios->perfiles_id);
+$oPuestos = new puestos();
+$oPuestos->form = '1';
+if ($sesion->nvl_usuario > 1) {
+    $oPuestos->id_puesto = $sesion->puesto;
+}
+$lstpuestos = $oPuestos->Listado();
+
+$aPuestos = empty($oDocumentacion->id_puesto) ? array() : explode("@", $oDocumentacion->id_puesto);
 ?>
 <script type="text/javascript">
     $(document).ready(function(e) {
@@ -85,20 +100,20 @@ $aPermisos = empty($oUsuarios->perfiles_id) ? array() : explode("@", $oUsuarios-
                 beforeSend: function() {},
                 success: function(data) {
                     var str = data;
-                var datos0 = str.split("@")[0];
-                var datos1 = str.split("@")[1];
-                var datos2 = str.split("@")[2];
-                if (datos0.includes('Base de Datos')) {
-                    datos0 = "Sistema";
-                }
-                if ((datos3 = str.split("@")[3]) === undefined) {
-                    datos3 = "";
-                } else {
-                    datos3 = str.split("@")[3];
-                }
-                Alert(datos0, datos1 + "" + datos3, datos2);
-                Listado();
-                $("#myModal_nominas").modal("hide");   
+                    var datos0 = str.split("@")[0];
+                    var datos1 = str.split("@")[1];
+                    var datos2 = str.split("@")[2];
+                    if (datos0.includes('Base de Datos')) {
+                        datos0 = "Sistema";
+                    }
+                    if ((datos3 = str.split("@")[3]) === undefined) {
+                        datos3 = "";
+                    } else {
+                        datos3 = str.split("@")[3];
+                    }
+                    Alert(datos0, datos1 + "" + datos3, datos2);
+                    Listado();
+                    $("#myModal_nominas").modal("hide");
                 }
             });
         });
@@ -136,6 +151,7 @@ $aPermisos = empty($oUsuarios->perfiles_id) ? array() : explode("@", $oUsuarios-
                 }
             });
         });
+        $('.js-example-basic-multiple').select2();
     });
 
     function changeTipoDocumento(datos) {
@@ -229,6 +245,16 @@ $aPermisos = empty($oUsuarios->perfiles_id) ? array() : explode("@", $oUsuarios-
             <div class="row">
                 <div class="col">
                     <div class="form-group">
+                        <strong class="">Fecha de Creación:</strong>
+                        <div class="form-group">
+                            <input type="date" aria-describedby="" description="Seleccione fecha de creación" id="fecha_creacion" value="<?= $oDocumentacion->fecha_creacion; ?>" required="" name="fecha_creacion" class="form-control ">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
                         <strong class="">Estatus del Documento:</strong>
                         <div class="form-group">
                             <select id="id_estatus" description="Seleccione el estatus del documento" class="form-control obligado" name="id_estatus">
@@ -314,7 +340,28 @@ $aPermisos = empty($oUsuarios->perfiles_id) ? array() : explode("@", $oUsuarios-
                         </div>
                     </div>
                 </div>
+                <div class="col">
+                    <div class="form-group">
+                        <strong class="">Puesto:</strong>
+                        <div class="form-group">
+                            <select id="id_puesto" description="Seleccione el puesto" class="form-control obligado js-example-basic-multiple" name="id_puesto[]" multiple="multiple">
+                                <?php
+                                if (count($lstpuestos) > 0) {
+                                    echo "<option value='0' >-- TODOS --</option>\n";
+                                    foreach ($lstpuestos as $idx => $campo) {
+                                        if ($oDocumentacion->ExistePermiso($campo->id, $aPuestos) === true) {
+                                            echo "<option value='{$campo->id}' selected>{$campo->nombre}</option>\n";
+                                        } else {
+                                            echo "<option value='{$campo->id}'>{$campo->nombre}</option>\n";
+                                        }
+                                    }
+                                }
+                                ?>
+                            </select>
+                        </div>
 
+                    </div>
+                </div>
             </div>
             <div class="row">
                 <div class="col">
@@ -352,6 +399,16 @@ $aPermisos = empty($oUsuarios->perfiles_id) ? array() : explode("@", $oUsuarios-
                             <input type="file" id="archivo_pdf" name="archivo_pdf" value="" /><br />
                             <a class="btn btn-outline-sm" style="width:33%" id="imgPdf" href="<?= $oDocumentacion->url_pdf ?>"><img src="app/views/default/img/file_pdf.png" data-toggle="tooltip" title="" data-original-title="PDF"> </a>
                             <input type="button" id="btnQuitarPdf" name="btnQuitarPdf" value="Quitar" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <strong class="">Comentarios:</strong>
+                        <div class="form-group">
+                            <textarea id="comentarios" name="comentarios" class="form-control" rows="5" cols="20"><?= $oDocumentacion->comentarios ?></textarea>
                         </div>
                     </div>
                 </div>

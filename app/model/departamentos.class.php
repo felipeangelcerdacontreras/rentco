@@ -38,7 +38,12 @@ class departamentos extends AW {
             $sqlForm = "where estatus = '1'";
         }
 
-        $sql = "SELECT * FROM departamentos {$sqlForm} ";
+        $sqlDepartamento = "";
+        if (!empty($this->id)) {
+            $sqlDepartamento = " and id = '{$this->id}'";
+        }
+
+        $sql = "SELECT * FROM departamentos {$sqlForm} {$sqlDepartamento}";
         return $this->Query($sql);
         
     }

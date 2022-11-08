@@ -115,6 +115,7 @@ $aPermisos = empty($oUsuarios->perfiles_id) ? array() : explode("@", $oUsuarios-
                     <input type="checkbox" name="perfiles_id[]" value="ver" <?php if ($oUsuarios->ExistePermiso("ver", $aPermisos) === true) echo "checked" ?>><strong> Ver</strong><br>
                     <input type="checkbox" name="perfiles_id[]" value="editar" <?php if ($oUsuarios->ExistePermiso("editar", $aPermisos) === true) echo "checked" ?>><strong> Editar</strong><br>
                     <input type="checkbox" name="perfiles_id[]" value="imprimir" <?php if ($oUsuarios->ExistePermiso("imprimir", $aPermisos) === true) echo "checked" ?>><strong> Imprimir</strong><br>
+                    <input type="checkbox" name="perfiles_id[]" value="agregar" <?php if ($oUsuarios->ExistePermiso("agregar", $aPermisos) === true) echo "checked" ?>><strong> Agregar</strong><br>
                     
                 </div>
             </div>

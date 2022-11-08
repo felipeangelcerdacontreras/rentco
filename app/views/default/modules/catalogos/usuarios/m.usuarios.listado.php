@@ -13,7 +13,9 @@ $lstUsuarios = $oUsuarios->Listado();
 ?>
 <script type="text/javascript">
     $(document).ready(function(e) {
-        $("#dataTable").DataTable();
+        $("#dataTable").DataTable({
+            scrollY: '300px'
+        });
 
         $("#btnAgregar").button().click(function(e) {
             Editar("", "Agregar");
@@ -42,12 +44,6 @@ $lstUsuarios = $oUsuarios->Listado();
                         <th style="width: 10%;">Acciones</th>
                     </tr>
                 </thead>
-                <tfoot>
-                    <th>Nombre</th>
-                    <th>Puesto</th>
-                    <th>Departamento</th>
-                    <th>Acciones</th>
-                </tfoot>
                 <tbody>
                     <?php
                     if (count($lstUsuarios) > 0) {
