@@ -9,9 +9,9 @@ $_SITE_PATH = $_SERVER["DOCUMENT_ROOT"] . "/" . explode("/", $_SERVER["PHP_SELF"
 require_once($_SITE_PATH . "app/model/bitacora.class.php");
 require_once($_SITE_PATH . "/app/model/usuarios.class.php");
 
-$obitacora = new bitacora(true, $_POST);
-$sesion = $_SESSION[$obitacora->NombreSesion];
-$lstbitacora = $obitacora->Listado();
+$oBitacora = new bitacora(true, $_POST);
+$sesion = $_SESSION[$oBitacora->NombreSesion];
+$lstbitacora = $oBitacora->Listado();
 
 $oUsuarios = new Usuarios();
 $oUsuarios->id = $sesion->id;
@@ -36,33 +36,22 @@ $aPermisos = empty($oUsuarios->perfiles_id) ? array() : explode("@", $oUsuarios-
 <div class="card shadow mb-4">
     <div class="card-header py-3" style="text-align:left">
         <h5 class="m-0 font-weight-bold text-primary">bitacora</h5>
-        <div class="form-group" style="text-align:right">
-            <input type="button" id="btnAgregar" class="btn btn-outline-primary" name="btnAgregar" value="Agregar Nuevo" />
-        </div>
     </div>
     <div class="card-body">
         <div class="table-responsive">
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                     <tr>
-                        <th>Modulo</th>
-                        <th>Operacion</th>
-                        <th>Modificacion</th>
-                        <th>PDF</th>
-                        <th>WORD</th>
-                        <th>Usuario</th>
-                        <th>Fecha</th>
+                        <th style="text-align: center;">Modulo</th>
+                        <th style="text-align: center;">Operacion</th>
+                        <th style="text-align: center;">Permisos</th>
+                        <th style="text-align: center;">Modificacion</th>
+                        <th style="text-align: center;">PDF</th>
+                        <th style="text-align: center;">Editable</th>
+                        <th style="text-align: center;">Usuario</th>
+                        <th style="text-align: center;">Fecha</th>
                     </tr>
                 </thead>
-                <tfoot>
-                    <th>Modulo</th>
-                    <th>Operacion</th>
-                    <th style="width: 30%;">Modificacion</th>
-                    <th>PDF</th>
-                    <th>WORD</th>
-                    <th>Usuario</th>
-                    <th>Fecha</th>
-                </tfoot>
                 <tbody>
                     <?php
                     if (count($lstbitacora) > 0) {
@@ -71,38 +60,53 @@ $aPermisos = empty($oUsuarios->perfiles_id) ? array() : explode("@", $oUsuarios-
                             <tr>
                                 <td style="text-align: center;"><?= $campo->modulo; ?></td>
                                 <td style="text-align: center;"><?= $campo->operacion ?></td>
-                                <td style="text-align: center;"><?php
-                                                                $parentecis = array("(", ")");
-                                                                $remove = str_replace($parentecis, "", $campo->modificacion);
-                                                                $cambios = explode("°", $remove);
-                                                                //print_r($cambios);
-                                                                for ($i = 0; $i < count($cambios); $i++) {
-                                                                    if (strpos($cambios[$i], '@') !== false && substr_count($cambios[$i], '@') > 1) { ?>
-                                            <div style="float: left;">
-                                                <label name="" style="border: 1px solid #0e0e0e;">
-                                                    <?php echo "Permisos:" . "<br />";
-                                                                        $permisos = explode("@", $cambios[$i]);
-                                                                        for ($x = 0; $x < count($permisos); $x++) { ?>
+                                <td><?php
+                                    $parentecis = array("(", ")");
+                                    $remove = str_replace($parentecis, "", $campo->modificacion);
+                                    $cambios = explode("°", $remove);
+                                    //print_r($cambios);
+                                    for ($i = 0; $i < count($cambios); $i++) {
+                                        if (strpos($cambios[$i], '@') !== false && substr_count($cambios[$i], '@') > 1) { ?>
+                                            <div style="flex-direction: column; box-sizing: border-box;">
+                                                <label name="" style="">
+                                                    <?php 
+                                                    $permisos = explode("@", $cambios[$i]);
+                                                    for ($x = 0; $x < count($permisos); $x++) { ?>
                                                         <strong><?php
-                                                                            echo " ".nl2br($permisos[$x] . "<br />");
+                                                                if ($permisos[$x] != "")
+                                                                 echo " *." . nl2br($permisos[$x] . "<br />");
                                                                 ?>
                                                         </strong>
                                                     <?php
-                                                                        }
+                                                    }
                                                     ?>
                                                 </label>
                                             </div>
+                                    <?php
+                                        }
+                                    }
+                                    ?>
+                                </td>
+                                <td style="text-align: center;">
+                                    <?php
+                                    $parentecis = array("(", ")");
+                                    $remove = str_replace($parentecis, "", $campo->modificacion);
+                                    $cambios = explode("°", $remove);
+                                    //print_r($cambios);
+                                    for ($i = 0; $i < count($cambios); $i++) {
+                                        if (strpos($cambios[$i], '@') !== false && substr_count($cambios[$i], '@') > 1) { ?>
                                         <?php
-                                                                    } else { ?>
-                                            <div style="float: right;">
-                                                <label name="" style="border: 1px solid #0e0e0e; float: right;"><?php
-                                                                                                                echo " ".$cambios[$i] . '<br />';
+                                        } else { ?>
+                                            <div style="flex-direction: column; box-sizing: border-box;">
+                                                <label name="" style=""><?php
+                                                    $nomCam = explode(":", $cambios[$i]);
+                                                    if ($nomCam[0] != "")
+                                                    echo " <strong>" . $nomCam[0]." :</strong>". $nomCam[1] . '<br />';
                                                                                                                 ?>
                                                 </label>
                                             </div>
-                                    <?php
-                                                                    }
-                                                                }
+                                    <?php  }
+                                    }
                                     ?>
                                 </td>
                                 <td style="text-align: center;">
@@ -115,11 +119,11 @@ $aPermisos = empty($oUsuarios->perfiles_id) ? array() : explode("@", $oUsuarios-
                                 <td style="text-align: center;">
                                     <?php if ($campo->url_word != "") {
                                         if ($oUsuarios->ExistePermiso("ver", $aPermisos) === true) { ?>
-                                            <a class="btn btn-outline-sm" style="width:33%" href="javascript:Editar('<?= $campo->url_word ?>','Ver')"><img src="app/views/default/img/word.png" data-toggle="tooltip" title="" data-original-title="Descargar"> </a>
+                                            <a class="btn btn-outline-sm" style="width:60%" href="<?= $campo->url_word ?>"><img src="app/views/default/img/down.png" style="width: 93%;" data-toggle="tooltip" title="" data-original-title="Descargar"> </a>
                                     <?php }
                                     } ?>
                                 </td>
-                                <td style="text-align: center;"><?= $campo->usuario ?></td>
+                                <td style="text-align: center;"><?= $campo->nombre_usuario ?></td>
                                 <td style="text-align: center;text-transform:uppercase;"><?= $campo->fecha ?></td>
                             </tr>
                     <?php

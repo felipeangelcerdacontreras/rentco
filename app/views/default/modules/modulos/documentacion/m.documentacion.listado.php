@@ -7,6 +7,7 @@ session_start();
 
 $_SITE_PATH = $_SERVER["DOCUMENT_ROOT"] . "/" . explode("/", $_SERVER["PHP_SELF"])[1] . "/";
 require_once($_SITE_PATH . "app/model/documentacion.class.php");
+require_once($_SITE_PATH . "app/model/documentacion_permisos.class.php");
 require_once($_SITE_PATH . "/app/model/usuarios.class.php");
 
 $oDocumentacion = new documentacion(true, $_POST);
@@ -19,6 +20,10 @@ $lstDocumentacion = $oDocumentacion->Listado();
 $oUsuarios = new Usuarios();
 $oUsuarios->id = $sesion->id;
 $oUsuarios->Informacion();
+
+$oDocPermiso = new documentacion_permisos();
+$oDocPermiso->id_documento = addslashes(filter_input(INPUT_POST, "id"));
+$lstPermisos = $oDocPermiso->Listado();
 
 $aPermisos = empty($oUsuarios->perfiles_id) ? array() : explode("@", $oUsuarios->perfiles_id);
 ?>
@@ -50,14 +55,14 @@ $aPermisos = empty($oUsuarios->perfiles_id) ? array() : explode("@", $oUsuarios-
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                     <tr>
-                        <th>Fecha de Creación</th>
-                        <th>Fecha de revisión o Actualización</th>
-                        <th>Estatus del Documento</th>
-                        <th>Proceso</th>
-                        <th>Tipo de Documento</th>
-                        <th>Area/ Departamento</th>
-                        <th>Clave de Calidad</th>
-                        <th>Nombre</th>
+                        <th style="text-align: center;">Fecha de Creación</th>
+                        <th style="text-align: center;">Fecha de revisión o Actualización</th>
+                        <th style="text-align: center;">Estatus del Documento</th>
+                        <th style="text-align: center;">Proceso</th>
+                        <th style="text-align: center;">Tipo de Documento</th>
+                        <th style="text-align: center;">Area/ Departamento</th>
+                        <th style="text-align: center;">Clave de Calidad</th>
+                        <th style="text-align: center;">Nombre</th>
                         <th style="width:20%">Acciones</th>
                     </tr>
                 </thead>
@@ -66,45 +71,35 @@ $aPermisos = empty($oUsuarios->perfiles_id) ? array() : explode("@", $oUsuarios-
                     if (count($lstDocumentacion) > 0) {
                         foreach ($lstDocumentacion as $idx => $campo) {
                             if ($sesion->nvl_usuario > 1) {
+                                foreach ($lstPermisos as $idx => $permiso) {
+                                    if ($permiso->id_puesto == $sesion->puesto && $permiso->id_documento == $campo->id) {
 
-                                $aPuestos = empty($campo->id_puesto) ? array() : explode("@", $campo->id_puesto);
-                                $bExiste = false;
-                                
-                                if ($aPuestos && count($aPuestos) > 0) {
-                                    foreach ($aPuestos as $idx => $val) {
-                                        if ($val === $sesion->puesto) {
-                                            $bExiste = true;
-                                            break;
-                                        }
+                    ?>
+                                        <tr>
+                                            <td style="text-align: center;"><?= $campo->fecha_creacion; ?></td>
+                                            <td style="text-align: center;"><?= $campo->fecha_actualizacion ?></td>
+                                            <td style="text-align: center;"><?= $campo->estatus_nombre ?></td>
+                                            <td style="text-align: center;"><?= $campo->proceso ?></td>
+                                            <td style="text-align: center;"><?= $campo->tipo_documento ?></td>
+                                            <td style="text-align: center;"><?= $campo->departamento ?></td>
+                                            <td style="text-align: center;text-transform:uppercase;"><?= $campo->clave_calidad ?></td>
+                                            <td style="text-align: center;"><?= $campo->nombre ?></td>
+                                            <td style="text-align: center;">
+                                                <?php if ($permiso->ver == "ver") { ?>
+                                                    <a class="btn btn-outline-sm" style="width:33%" href="javascript:Editar('<?= $campo->url_pdf ?>','Ver')"><img src="app/views/default/img/view.png" data-toggle="tooltip" title="" data-original-title="Ver"> </a>
+                                                <?php } ?>
+                                                <?php if ($permiso->editar == "editar") { ?>
+                                                    <a class="btn btn-outline-sm" style="width:25%" href="javascript:Editar('<?= $campo->url_pdf ?>','Imprimir')"><img src="app/views/default/img/printer.png" data-toggle="tooltip" title="" data-original-title="Imprimir" style="width: 80%;height: 80%;"> </a>
+                                                <?php } ?>
+                                                <?php if ($permiso->imprimir == "imprimir") { ?>
+                                                    <a class="btn btn-outline-sm" style="width:33%" href="javascript:Editar('<?= $campo->id ?>','Agregar')"><img src="app/views/default/img/edit_22x22.png" data-toggle="tooltip" title="" data-original-title="Editar"></a>
+                                                <?php } ?>
+                                            </td>
+                                        </tr>
+                                <?php
                                     }
                                 }
-
-                                if ($bExiste) {
-                    ?>
-                                    <tr>
-                                        <td style="text-align: center;"><?= $campo->fecha_creacion; ?></td>
-                                        <td style="text-align: center;"><?= $campo->fecha_actualizacion ?></td>
-                                        <td style="text-align: center;"><?= $campo->estatus_nombre ?></td>
-                                        <td style="text-align: center;"><?= $campo->proceso ?></td>
-                                        <td style="text-align: center;"><?= $campo->tipo_documento ?></td>
-                                        <td style="text-align: center;"><?= $campo->departamento ?></td>
-                                        <td style="text-align: center;text-transform:uppercase;"><?= $campo->clave_calidad ?></td>
-                                        <td style="text-align: center;"><?= $campo->nombre ?></td>
-                                        <td style="text-align: center;">
-                                            <?php if ($oUsuarios->ExistePermiso("ver", $aPermisos) === true) { ?>
-                                                <a class="btn btn-outline-sm" style="width:33%" href="javascript:Editar('<?= $campo->url_pdf ?>','Ver')"><img src="app/views/default/img/view.png" data-toggle="tooltip" title="" data-original-title="Ver"> </a>
-                                            <?php } ?>
-                                            <?php if ($oUsuarios->ExistePermiso("imprimir", $aPermisos) === true) { ?>
-                                                <a class="btn btn-outline-sm" style="width:25%" href="javascript:Editar('<?= $campo->url_pdf ?>','Imprimir')"><img src="app/views/default/img/printer.png" data-toggle="tooltip" title="" data-original-title="Imprimir" style="width: 80%;height: 80%;"> </a>
-                                            <?php } ?>
-                                            <?php if ($oUsuarios->ExistePermiso("editar", $aPermisos) === true) { ?>
-                                                <a class="btn btn-outline-sm" style="width:33%" href="javascript:Editar('<?= $campo->id ?>','Agregar')"><img src="app/views/default/img/edit_22x22.png" data-toggle="tooltip" title="" data-original-title="Editar"></a>
-                                            <?php } ?>
-                                        </td>
-                                    </tr>
-                    <?php
-                                }
-                            } else  {
+                            } else {
                                 ?>
                                 <tr>
                                     <td style="text-align: center;"><?= $campo->fecha_creacion; ?></td>
@@ -125,9 +120,13 @@ $aPermisos = empty($oUsuarios->perfiles_id) ? array() : explode("@", $oUsuarios-
                                         <?php if ($oUsuarios->ExistePermiso("editar", $aPermisos) === true) { ?>
                                             <a class="btn btn-outline-sm" style="width:33%" href="javascript:Editar('<?= $campo->id ?>','Agregar')"><img src="app/views/default/img/edit_22x22.png" data-toggle="tooltip" title="" data-original-title="Editar"></a>
                                         <?php } ?>
+
+                                        <?php if ($oUsuarios->ExistePermiso("actualizar", $aPermisos) === true) { ?>
+                                            <a class="btn btn-outline-sm" style="width:33%" href="javascript:Editar('<?= $campo->id ?>','Actualizar')"><img src="app/views/default/img/actualizar.png" data-toggle="tooltip" title="" data-original-title="Actualizar"></a>
+                                        <?php } ?>
                                     </td>
                                 </tr>
-                <?php
+                    <?php
                             }
                         }
                     }

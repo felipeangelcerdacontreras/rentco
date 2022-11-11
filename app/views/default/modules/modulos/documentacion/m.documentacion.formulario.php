@@ -7,6 +7,7 @@ session_start();
 
 $_SITE_PATH = $_SERVER["DOCUMENT_ROOT"] . "/" . explode("/", $_SERVER["PHP_SELF"])[1] . "/";
 require_once($_SITE_PATH . "app/model/documentacion.class.php");
+require_once($_SITE_PATH . "app/model/documentacion_permisos.class.php");
 require_once($_SITE_PATH . "/app/model/usuarios.class.php");
 require_once($_SITE_PATH . "app/model/estatus_documento.class.php");
 require_once($_SITE_PATH . "app/model/documento.class.php");
@@ -21,6 +22,14 @@ $oDocumentacion->ValidaNivelUsuario("documentacion");
 $oDocumentacion->id = addslashes(filter_input(INPUT_POST, "id"));
 $nombre = addslashes(filter_input(INPUT_POST, "nombre"));
 $oDocumentacion->Informacion();
+
+if ($oDocumentacion->id != "") {
+    $oDocPermiso = new documentacion_permisos();
+    $oDocPermiso->id_documento = addslashes(filter_input(INPUT_POST, "id"));
+    $lstPermisos = $oDocPermiso->Listado();
+} else {
+    $lstPermisos = "";
+}
 
 $oEstatus_documento = new estatus_documento();
 $oEstatus_documento->form = '1';
@@ -57,11 +66,31 @@ if ($sesion->nvl_usuario > 1) {
 $lstpuestos = $oPuestos->Listado();
 
 $aPuestos = empty($oDocumentacion->id_puesto) ? array() : explode("@", $oDocumentacion->id_puesto);
+
+$parentecis = array("(", ")");
+$remove = str_replace($parentecis, "", $oDocumentacion->permisos);
+
+$aPermisos = empty($remove) ? array() : explode("°", $remove);
+
+foreach ($aPermisos as $pos => $val) {
+    $arrayPermisos1[] = array($val);
+}
+
+if ($nombre == "Actualizar"){
+    $oDocumentacion->id = '';
+}
+
 ?>
 <script type="text/javascript">
     $(document).ready(function(e) {
         $('#id_tipo_documento').change(changeTipoDocumento);
         $('#id_departamento').change(changeDepartamento);
+        $('#id_puesto').change(changePuesto);
+        changePuesto();
+        let boton = '<?= $nombre  ?>';
+        $("#btnGuardar").val(boton);
+
+
         $("#nameModal_").text("<?php echo $nombre ?> Documentación");
         $("#frmFormulario_").ajaxForm({
             beforeSubmit: function(formData, jqForm, options) {},
@@ -113,7 +142,7 @@ $aPuestos = empty($oDocumentacion->id_puesto) ? array() : explode("@", $oDocumen
                     }
                     Alert(datos0, datos1 + "" + datos3, datos2);
                     Listado();
-                    $("#myModal_nominas").modal("hide");
+                    $("#myModal").modal("hide");
                 }
             });
         });
@@ -217,6 +246,72 @@ $aPuestos = empty($oDocumentacion->id_puesto) ? array() : explode("@", $oDocumen
             });
         }
     });
+
+    function changePuesto(datos) {
+        let $select = $('#id_puesto');
+        let selecteds = [];
+
+        $select.children(':selected').each((idx, el) => {
+            selecteds.push({
+                value: el.value,
+                text: el.text
+            });
+        });
+        CrearInfo(selecteds);
+    }
+
+    function CrearInfo(datos) {
+        $("#divPuestos").html("");
+
+        let n = 0;
+        let contenido = "";
+        let num = datos.length;
+
+        let selecteds = [];
+        selecteds = <?php echo json_encode($lstPermisos); ?>;
+        let num2 = selecteds.length;
+
+        let bAccion = false;  
+        if (num2 < num) {
+            num2++;
+            bAccion = true;
+        }
+
+        for (n; n < num; n++) {
+            if (num2 > 0 && bAccion == false) {
+                for (let i = 0; i < num2; i++) {
+                        if (datos[n]['value'] == selecteds[i]['id_puesto']) {
+                        contenido += '<input type="hidden" name="permisos_' + n + '[]" value="' + datos[n]['value'] + '">' + datos[n]['text'] + ': ';
+                        if (selecteds[i]['ver'] == 'ver') {
+                            contenido += '<input type="checkbox" name="permisos_' + n + '[]" value="ver" checked><strong> Ver</strong>';
+                        } else {
+                            contenido += '<input type="checkbox" name="permisos_' + n + '[]" value="ver" ><strong> Ver</strong>';
+                        }
+
+                        if (selecteds[i]['editar'] == 'editar') {
+                            contenido += '<input type="checkbox" name="permisos_' + n + '[]" value="editar" checked><strong> Editar</strong>';
+                        } else {
+                            contenido += '<input type="checkbox" name="permisos_' + n + '[]" value="editar" ><strong> Editar</strong>';
+                        }
+
+                        if (selecteds[i]['imprimir'] == 'imprimir') {
+                            contenido += '<input type="checkbox" name="permisos_' + n + '[]" value="imprimir" checked><strong> Imprimir</strong>';
+                        } else {
+                            contenido += '<input type="checkbox" name="permisos_' + n + '[]" value="imprimir" ><strong> Imprimir</strong><br />';
+                        }
+                    } 
+                }
+            } else {
+                contenido += '<input type="hidden" name="permisos_' + n + '[]" value="' + datos[n]['value'] + '">' + datos[n]['text'] + ': ' +
+                    '<input type="checkbox" name="permisos_' + n + '[]" value="ver" ><strong> Ver</strong>' +
+                    '<input type="checkbox" name="permisos_' + n + '[]" value="editar" ><strong> Editar</strong>' +
+                    '<input type="checkbox" name="permisos_' + n + '[]" value="imprimir" ><strong> Imprimir</strong> <br />';
+            }
+        }
+        $("#divPuestos").append(contenido);
+        $("#divPuestos").append('<input type="hidden" name="contador" value="' + n + '">');
+
+    }
 
 
     if ($("#url_word").val() == "") {
@@ -347,12 +442,11 @@ $aPuestos = empty($oDocumentacion->id_puesto) ? array() : explode("@", $oDocumen
                             <select id="id_puesto" description="Seleccione el puesto" class="form-control obligado js-example-basic-multiple" name="id_puesto[]" multiple="multiple">
                                 <?php
                                 if (count($lstpuestos) > 0) {
-                                    echo "<option value='0' >-- TODOS --</option>\n";
                                     foreach ($lstpuestos as $idx => $campo) {
                                         if ($oDocumentacion->ExistePermiso($campo->id, $aPuestos) === true) {
-                                            echo "<option value='{$campo->id}' selected>{$campo->nombre}</option>\n";
+                                            echo "<option value='{$campo->id}' selected>{$campo->id}: {$campo->nombre}</option>\n";
                                         } else {
-                                            echo "<option value='{$campo->id}'>{$campo->nombre}</option>\n";
+                                            echo "<option value='{$campo->id}'>{$campo->id}: {$campo->nombre}</option>\n";
                                         }
                                     }
                                 }
@@ -364,6 +458,14 @@ $aPuestos = empty($oDocumentacion->id_puesto) ? array() : explode("@", $oDocumen
                 </div>
             </div>
             <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <strong class="">Permisos Puestos:</strong>
+                        <div class="form-group" id="divPuestos">
+
+                        </div>
+                    </div>
+                </div>
                 <div class="col">
                     <div class="form-group">
                         <strong class="">Clave de Calidad:</strong>
@@ -384,10 +486,10 @@ $aPuestos = empty($oDocumentacion->id_puesto) ? array() : explode("@", $oDocumen
             <div class="row">
                 <div class="col">
                     <div class="form-group">
-                        <label for="exampleFormControlFile1">Documento para edicion (word)</label>
+                        <label for="exampleFormControlFile1">Documento para edicion (Editable)</label>
                         <div class="col-sm-2">
                             <input type="file" id="archivo_word" name="archivo_word" value="<?= $oDocumentacion->url_word ?>" /><br />
-                            <a class="btn btn-outline-sm" style="width:33%" id="imgWord" href="<?= $oDocumentacion->url_word ?>"><img src="app/views/default/img/word.png" data-toggle="tooltip" title="" data-original-title="Word"> </a>
+                            <a class="btn btn-outline-sm" style="width:80%" id="imgWord" href="<?= $oDocumentacion->url_word ?>"><img src="app/views/default/img/down.png" style="width:85%" data-toggle="tooltip" title="" data-original-title="Editable"> </a>
                             <input type="button" id="btnQuitarWord" name="btnQuitarWord" value="Quitar" class="form-control" />
                         </div>
                     </div>

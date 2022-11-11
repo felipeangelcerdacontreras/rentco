@@ -37,8 +37,8 @@ $lstEstatus_documento = $oEstatus_documento->Listado();
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                     <tr>
-                        <th>Nombre</th>
-                        <th>Estatus</th>
+                        <th style="text-align: center;">Nombre</th>
+                        <th style="text-align: center;">Estatus</th>
                         <th style="width: 10%;">Acciones</th>
                     </tr>
                 </thead>

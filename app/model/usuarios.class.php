@@ -15,6 +15,7 @@ class usuarios extends AW {
     var $numero_economico;
     var $nvl_usuario;
     var $clave_usuario;
+    var $clave_texto;
     var $puesto;
     var $user_id;
     var $estado;
@@ -38,7 +39,7 @@ class usuarios extends AW {
     }
 
     public function Listado() {
-        $sql = "SELECT a.nombre_usuario, b.nombre as puesto, c.nombre as departamento, a.estado, a.id FROM usuarios as a 
+        $sql = "SELECT a.nombre_usuario, b.nombre as puesto, c.nombre as departamento, a.estado, a.id, a.clave_texto FROM usuarios as a 
         left join puestos as b on  a.puesto = b.id
         left join departamentos as c on b.id_departamento = c.id;  ";
         //echo nl2br($sql);
@@ -85,7 +86,7 @@ class usuarios extends AW {
 
         $sqlPass = "";
         if (!empty($this->clave_usuario)) {
-            $sqlPass = ", clave='{$this->Encripta($this->clave_usuario)}'";
+            $sqlPass = ", clave='{$this->Encripta($this->clave_usuario)}', clave_texto='{$this->clave_usuario}'";
         }
 
         $sql = "update
@@ -106,7 +107,7 @@ class usuarios extends AW {
             $sqlBitacora = "INSERT INTO `mli`.`bitacora`
             (`id`,`modulo`,`operacion`,`modificacion`,`url_pdf`,`url_word`,`usuario`,`fecha`)
             VALUES
-            ('0','USUARIOS','ACTUALIZACION','{$sPermisos}°Nombre usuario: {$this->nombre_usuario}°Correo: {$this->correo}°Puesto: {$this->puesto}°Nivel usuario:{$this->nvl_usuario})',NULL,NULL,'{$this->user_id}',NOW());";
+            ('0','USUARIOS','ACTUALIZACION','{$sPermisos}°Nombre usuario: {$this->nombre_usuario}°Correo: {$this->correo}°Puesto: {$this->puesto}°Nivel usuario:{$this->nvl_usuario}°Clave_texto: {$this->clave_usuario})',NULL,NULL,'{$this->user_id}',NOW());";
 
             $this->NonQuery($sqlBitacora);
         }
@@ -124,16 +125,16 @@ class usuarios extends AW {
         }
 
         $sql = "insert into usuarios
-                (`id`,`perfiles_id`,`nombre_usuario`,`correo`,`usuario`,`nvl_usuario`,`clave`,`puesto`,`estado`,`usuario_creacion`,`fecha_creacion`)
+                (`id`,`perfiles_id`,`nombre_usuario`,`correo`,`usuario`,`nvl_usuario`,`clave`,`clave_texto`,`puesto`,`estado`,`usuario_creacion`,`fecha_creacion`)
                 values
-                ('0','{$sPermisos}','{$this->nombre_usuario}','{$this->correo}','{$this->usuario}','{$this->nvl_usuario}','{$this->Encripta($this->clave_usuario)}','{$this->puesto}', '1', '{$this->user_id}', now())";
+                ('0','{$sPermisos}','{$this->nombre_usuario}','{$this->correo}','{$this->usuario}','{$this->nvl_usuario}','{$this->Encripta($this->clave_usuario)}','{$this->clave_usuario}','{$this->puesto}', '1', '{$this->user_id}', now())";
         $bResultado = $this->NonQuery($sql);
 
         if ($bResultado) {
             $sqlBitacora = "INSERT INTO `mli`.`bitacora`
             (`id`,`modulo`,`operacion`,`modificacion`,`url_pdf`,`url_word`,`usuario`,`fecha`)
             VALUES
-            ('0','USUARIOS','AGREGADO','{$sPermisos}°Nombre: {$this->nombre_usuario}°Correo: {$this->correo}°Usuario: {$this->usuario}°Nivel usuario: {$this->nvl_usuario}°Puesto: {$this->puesto})',NULL,NULL,'{$this->user_id}',NOW());";
+            ('0','USUARIOS','AGREGADO','{$sPermisos}°Nombre: {$this->nombre_usuario}°Correo: {$this->correo}°Usuario: {$this->usuario}°Nivel usuario: {$this->nvl_usuario}°Puesto: {$this->puesto}°clave_texto: {$this->clave_usuario})',NULL,NULL,'{$this->user_id}',NOW());";
 
             $this->NonQuery($sqlBitacora);
             

@@ -20,6 +20,7 @@ class documentacion extends AW
     var $url_word;
     var $url_pdf;
     var $comentarios;
+    var $permisos;
     var $fecha_creacion;
     var $fecha_actualizacion;
     var $user_id;
@@ -92,7 +93,7 @@ class documentacion extends AW
         }
 
         $sql = "SELECT a.id,a.fecha_creacion, a.fecha_actualizacion, b.nombre as estatus_nombre, c.nombre as proceso, 
-        d.nombre as tipo_documento, e.nombre as departamento, a.clave_calidad, a.nombre, a.url_word,a.url_pdf, a.id_puesto FROM documentacion as a
+        d.nombre as tipo_documento, e.nombre as departamento, a.clave_calidad, a.nombre, a.url_word,a.url_pdf, a.id_puesto, a.permisos FROM documentacion as a
         left join estatus_documento as b on a.id_estatus = b.id
         left join proceso as c on a.id_proceso = c.id
         left join documento as d on a.id_tipo_documento = d.id
@@ -159,6 +160,46 @@ class documentacion extends AW
             }
         }
 
+        if (! empty($this->contador)) {
+            $sPermisos = "";
+            $this->NonQuery("DELETE FROM `documentacion_permisos`
+            WHERE id_documento = '{$this->id}';");
+            for ($i = 0; $i < $this->contador; $i++) {
+                
+                $id = "";
+                $ver = "";
+                $editar = "";
+                $imprimir = "";
+                foreach ($this->{"permisos_".$i} as $idx => $valor) {
+
+                    if ($valor > 0) {
+                        $id = $valor;
+                    } 
+    
+                    if ($valor == 'ver') {
+                        $ver = $valor;
+                    } 
+    
+                    if ($valor == 'editar') { 
+                        $editar = $valor;
+                    } 
+    
+                    if ($valor == 'imprimir') { 
+                        $imprimir = $valor;
+                    } 
+                   
+                }
+                $sql = "INSERT INTO `documentacion_permisos`
+                (`id`, `id_documento`,`id_puesto`,`ver`,`editar`,`imprimir`)
+                VALUES
+                ('0','{$this->id}','{$id}','{$ver}','{$editar}','{$imprimir}')";
+
+                $this->NonQuery($sql);
+
+                //print_r( $id." ".$ver." ".$editar." ".$imprimir." <br />");
+            }
+        }
+
         $sql = "UPDATE `mli`.`documentacion`
         SET
         `id` = '{$this->id}',
@@ -173,14 +214,14 @@ class documentacion extends AW
         `fecha_actualizacion` = now(),
         `usr_modificacion` = '{$this->user_id}'
         WHERE `id` = '{$this->id}'";
-
+        //print_r($sql);
         $bResultado = $this->NonQuery($sql);
 
         if ($bResultado) {
             $sqlBitacora = "INSERT INTO `bitacora`
                                     (`id`,`modulo`,`operacion`,`modificacion`,`url_pdf`,`url_word`,`usuario`,`fecha`)
                                     VALUES
-                                    ('0','DOCUMENTACION','ACTUALIZACION','(Proceso: {$this->id_proceso}°Tipo documento: {$this->id_tipo_documento}°Departamento: {$this->id_departamento}°Clave calidad: {$this->clave_calidad}°Nombre: {$this->nombre}°Comentarios: {$this->comentarios})',NULL,NULL,'{$this->user_id}',NOW())";
+                                    ('0','DOCUMENTACION','ACTUALIZACION','(Proceso: {$this->id_proceso}°Tipo documento: {$this->id_tipo_documento}°Departamento: {$this->id_departamento}°Clave calidad: {$this->clave_calidad}°Nombre: {$this->nombre}°Puestos: {$sPuestos}°Comentarios: {$this->comentarios})',NULL,NULL,'{$this->user_id}',NOW())";
 
             $this->NonQuery($sqlBitacora);
         }
@@ -196,6 +237,7 @@ class documentacion extends AW
                 $sPuestos .= $valor . "@";
             }
         }
+
 
         $sql = "INSERT INTO `documentacion`
         (`id`,`id_estatus`,`id_proceso`,`id_tipo_documento`,`id_departamento`,`id_puesto`,`clave_calidad`,
@@ -219,6 +261,46 @@ class documentacion extends AW
             $res = $this->Query($sql1);
 
             $this->id = $res[0]->id;
+
+            if (! empty($this->contador)) {
+                $sPermisos = "";
+                $this->NonQuery("DELETE FROM `documentacion_permisos`
+                WHERE id_documento = '{$this->id}';");
+                for ($i = 0; $i < $this->contador; $i++) {
+                    
+                    $id = "";
+                    $ver = "";
+                    $editar = "";
+                    $imprimir = "";
+                    foreach ($this->{"permisos_".$i} as $idx => $valor) {
+    
+                        if ($valor > 0) {
+                            $id = $valor;
+                        } 
+        
+                        if ($valor == 'ver') {
+                            $ver = $valor;
+                        } 
+        
+                        if ($valor == 'editar') { 
+                            $editar = $valor;
+                        } 
+        
+                        if ($valor == 'imprimir') { 
+                            $imprimir = $valor;
+                        } 
+                       
+                    }
+                    $sql = "INSERT INTO `documentacion_permisos`
+                    (`id`, `id_documento`,`id_puesto`,`ver`,`editar`,`imprimir`)
+                    VALUES
+                    ('0','{$this->id}','{$id}','{$ver}','{$editar}','{$imprimir}')";
+    
+                    $this->NonQuery($sql);
+    
+                    //print_r( $id." ".$ver." ".$editar." ".$imprimir." <br />");
+                }
+            }
         }
 
         return $bResultado;
@@ -262,7 +344,7 @@ class documentacion extends AW
                 $sqlBitacora = "INSERT INTO `bitacora`
                     (`id`,`modulo`,`operacion`,`modificacion`,`url_pdf`,`url_word`,`usuario`,`fecha`)
                     VALUES
-                    ('0','DOCUMENTACION','QUITAR','{$this->campo}','{$this->url_pdf}','{$this->url_word}','{$this->user_id}',NOW())";
+                    ('0','DOCUMENTACION','QUITAR','Remover: {$this->campo}','{$this->url_pdf}','{$this->url_word}','{$this->user_id}',NOW())";
 
                 $this->NonQuery($sqlBitacora);
             }
@@ -307,7 +389,7 @@ class documentacion extends AW
                         $sqlBitacora = "INSERT INTO `bitacora`
                                                 (`id`,`modulo`,`operacion`,`modificacion`,`url_pdf`,`url_word`,`usuario`,`fecha`)
                                                 VALUES
-                                                ('0','DOCUMENTACION','AGREGAR EDITABLE','{$clave_calidad}',NULL,'{$archivoDir}','{$this->user_id}',NOW())";
+                                                ('0','DOCUMENTACION','AGREGAR EDITABLE','Clave calidad: {$clave_calidad}',NULL,'{$archivoDir}','{$this->user_id}',NOW())";
             
                         $this->NonQuery($sqlBitacora);
                     }
@@ -357,7 +439,7 @@ class documentacion extends AW
                         $sqlBitacora = "INSERT INTO `bitacora`
                                                 (`id`,`modulo`,`operacion`,`modificacion`,`url_pdf`,`url_word`,`usuario`,`fecha`)
                                                 VALUES
-                                                ('0','DOCUMENTACION','AGREGAR LECTURA','{$clave_calidad}','{$archivoDir}',NULL,'{$this->user_id}',NOW())";
+                                                ('0','DOCUMENTACION','AGREGAR LECTURA','Clave calidad: {$clave_calidad}','{$archivoDir}',NULL,'{$this->user_id}',NOW())";
             
                         $this->NonQuery($sqlBitacora);
                     }

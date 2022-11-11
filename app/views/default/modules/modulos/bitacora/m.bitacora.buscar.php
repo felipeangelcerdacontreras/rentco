@@ -102,10 +102,10 @@ $fecha_actual = date("d-m-Y");
 
     function Listado() {
         var jsonDatos = {
-            "fecha_creacion": $("#fecha_creacion_").val(),
-            "fecha_actualizacion": $("#fecha_actualizacion_").val(),
-            "id_estatus": $("#id_estatus_").val(),
-            "id_proceso": $("#id_proceso_").val(),
+            "fecha_inicial": $("#fecha_inicial").val(),
+            "fecha_final": $("#fecha_final").val(),
+            "modulo": $("#modulo").val(),
+            "operacion": $("#operacion").val(),
             "id_tipo_documento": $("#id_tipo_documento_").val(),
             "id_departamento": $("#id_departamento_").val(),
             "clave_calidad": $("#clave_calidad_").val(),
@@ -227,7 +227,7 @@ $fecha_actual = date("d-m-Y");
                                         <div class="form-group">
                                             <strong class="">Fecha inicial:</strong>
                                             <div class="form-group">
-                                                <input type="date" aria-describedby="" description="Seleccione fecha de creación" id="fecha_inicial_" value="" required name="fecha_inicial_" class="form-control " />
+                                                <input type="date" aria-describedby="" description="Seleccione fecha de creación" id="fecha_inicial" value="<?php echo date("Y-m-d", strtotime($fecha_actual . "- 1 week"));  ?>" required name="fecha_inicial" class="form-control " />
                                             </div>
                                         </div>
                                     </div>
@@ -235,7 +235,7 @@ $fecha_actual = date("d-m-Y");
                                         <div class="form-group">
                                             <strong class="">Fecha final:</strong>
                                             <div class="form-group">
-                                                <input type="date" aria-describedby="" description="Seleccione fecha de revisión o actualización" id="fecha_final_" value="" required name="fecha_final_" class="form-control " />
+                                                <input type="date" aria-describedby="" description="Seleccione fecha de revisión o actualización" id="fecha_final" value="<?php echo date('Y-m-d'); ?>" required name="fecha_final" class="form-control " />
                                             </div>
                                         </div>
                                     </div>
@@ -243,93 +243,33 @@ $fecha_actual = date("d-m-Y");
                                 <div class="row">
                                     <div class="col">
                                         <div class="form-group">
-                                            <strong class="">Estatus del Documento:</strong>
+                                            <strong class="">Modulo:</strong>
                                             <div class="form-group">
-                                                <select id="id_estatus_" description="Seleccione el puesto" class="form-control " name="id_estatus_">
-                                                    <?php
-                                                    if (count($lstEstatus_documento) > 0) {
-                                                        echo "<option value='0' >-- SELECCIONE --</option>\n";
-                                                        foreach ($lstEstatus_documento as $idx => $campo) {
-                                                            echo "<option value='{$campo->id}' >{$campo->nombre}</option>\n";
-                                                        }
-                                                    }
-                                                    ?>
+                                                <select id="modulo" description="Seleccione el modulo" class="form-control " name="modulo">
+                                                    <option value='0' >-- SELECCIONE --</option>\n";
+                                                    <option value='DEPARTAMENTOS'>DEPARTAMENTOS</option>
+                                                    <option value='PUESTOS'>PUESTOS</option>
+                                                    <option value='USUARIOS'>USUARIOS</option>
+                                                    <option value='ESTATUS DOCUMENTO'>ESTATUS DOCUMENTO</option>
+                                                    <option value='PROCESO'>PROCESO</option>
+                                                    <option value='DOCUMENTO'>DOCUMENTO</option>
+                                                    <option value='DOCUMENTACION'>DOCUMENTACION</option>
                                                 </select>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="form-group">
-                                            <strong class="">Proceso:</strong>
+                                            <strong class="">Operacion:</strong>
                                             <div class="form-group">
-                                                <select id="id_proceso_" description="Seleccione el puesto" class="form-control " name="id_proceso_">
-                                                    <?php
-                                                    if (count($lstProceso) > 0) {
-                                                        echo "<option value='0' >-- SELECCIONE --</option>\n";
-                                                        foreach ($lstProceso as $idx => $campo) {
-                                                            echo "<option value='{$campo->id}' >{$campo->nombre}</option>\n";
-                                                        }
-                                                    }
-                                                    ?>
+                                                <select id="operacion" description="Seleccione el puesto" class="form-control " name="operacion">
+                                                    <option value='0' >-- SELECCIONE --</option>\n";
+                                                    <option value='AGREGADO'>AGREGADO</option>
+                                                    <option value='AGREGAR EDITABLE'>AGREGAR EDITABLE</option>
+                                                    <option value='AGREGAR LECTURA'>AGREGAR LECTURA</option>
+                                                    <option value='ACTUALIZACION'>ACTUALIZACION</option>
+                                                    <option value='QUITAR'>QUITAR</option>
                                                 </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="form-group">
-                                            <strong class="">Tipo de documento:</strong>
-                                            <div class="form-group">
-                                                <select id="id_tipo_documento_" description="Seleccione el puesto" class="form-control" name="id_tipo_documento_">
-                                                    <?php
-                                                    if (count($lstDocumento) > 0) {
-                                                        echo "<option value='0' >-- SELECCIONE --</option>\n";
-                                                        foreach ($lstDocumento as $idx => $campo) {
-                                                            echo "<option value='{$campo->id}' >{$campo->nombre}</option>\n";
-                                                        }
-                                                    }
-                                                    ?>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="form-group">
-                                            <strong class="">Area/departamento:</strong>
-                                            <div class="form-group">
-                                                <select id="id_departamento_" description="Seleccione el puesto" class="form-control" name="id_departamento_">
-                                                    <?php
-                                                    if (count($lstDepartamentos) > 0) {
-                                                        echo "<option value='0' >-- SELECCIONE --</option>\n";
-                                                        foreach ($lstDepartamentos as $idx => $campo) {
-                                                            if ($sesion->nvl_usuario > 1) {
-                                                                if ($campo->id == $lstPuestos[0]->id_departamento) {
-                                                                    echo "<option value='{$campo->id}' selected>{$campo->nombre}</option>\n";
-                                                                }
-                                                            } else {
-                                                                echo "<option value='{$campo->id}' >{$campo->nombre}</option>\n";
-                                                            }
-                                                        }
-                                                    }
-                                                    ?>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="form-group">
-                                            <strong class="">Clave de Calidad:</strong>
-                                            <div class="form-group">
-                                                <input type="text" description="" aria-describedby="" id="clave_calidad_" required name="clave_calidad_" value="" class="form-control" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="form-group">
-                                            <strong class="">Nombre:</strong>
-                                            <div class="form-group">
-                                                <input type="text" description="" aria-describedby="" id="nombre_" required name="nombre_" value="" class="form-control" />
                                             </div>
                                         </div>
                                     </div>

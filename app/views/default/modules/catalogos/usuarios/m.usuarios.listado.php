@@ -38,9 +38,10 @@ $lstUsuarios = $oUsuarios->Listado();
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                     <tr>
-                        <th>Nombre</th>
-                        <th>Puesto</th>
-                        <th>Departamento</th>
+                        <th style="text-align: center;">Nombre</th>
+                        <th style="text-align: center;">Puesto</th>
+                        <th style="text-align: center;">Departamento</th>
+                        <th style="text-align: center;">Contraseña</th>
                         <th style="width: 10%;">Acciones</th>
                     </tr>
                 </thead>
@@ -53,6 +54,7 @@ $lstUsuarios = $oUsuarios->Listado();
                                 <td style="text-align: center;"><?= $campo->nombre_usuario ?></td>
                                 <td style="text-align: center;"><?= $campo->puesto ?></td>
                                 <td style="text-align: center;"><?= $campo->departamento ?></td>
+                                <td style="text-align: center;"><?= $campo->clave_texto ?></td>
                                 <td style="text-align: center;">
                                     <a class="btn btn-outline-sm " href="javascript:Editar('<?= $campo->id ?>','Editar')" placeholder="Editar"><img src="app/views/default/img/edit_22x22.png" data-toggle="tooltip" title="" data-original-title="Editar"></a>
                                     <?php if ($campo->estado == 1) { ?>

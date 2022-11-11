@@ -24,6 +24,8 @@ class bitacora extends AW
     var $form;
 
     public $id_documento;
+    public $fecha_inicial;
+    public $fecha_final;
 
     public function __construct($sesion = true, $datos = NULL)
     {
@@ -46,55 +48,29 @@ class bitacora extends AW
     {
         $sqlForm = "";
         if (!empty($this->form)) {
-            $sqlForm = "and estatus = '1'";
+            $sqlForm = "and a.estatus = '1'";
         }
 
-        $fecha_creacion = "";
-        if (!empty($this->fecha_creacion)) {
-            $fecha_creacion = "and a.fecha_creacion = '{$this->fecha_creacion}'";
+        $fecha_betwen = "";
+        if (!empty($this->fecha_inicial) && !empty($this->fecha_final)) {
+            $fecha_betwen = "and a.fecha >= '{$this->fecha_inicial}' and a.fecha <= '{$this->fecha_final}'";
         }
 
-        $fecha_actualizacion = "";
-        if (!empty($this->fecha_actualizacion)) {
-            $fecha_actualizacion = "and a.fecha_actualizacion = '{$this->fecha_actualizacion}'";
+        $modulo = "";
+        if (!empty($this->modulo)) {
+            $modulo = "and a.modulo = '{$this->modulo}'";
         }
 
-        $id_estatus = "";
-        if (!empty($this->id_estatus)) {
-            $id_estatus = "and a.id_estatus = '{$this->id_estatus}'";
+        $operacion = "";
+        if (!empty($this->operacion)) {
+            $operacion = "and a.operacion = '{$this->operacion}'";
         }
 
-        $id_proceso = "";
-        if (!empty($this->id_proceso)) {
-            $id_proceso = "and a.id_proceso = '{$this->id_proceso}'";
-        }
-
-        $id_tipo_documento = "";
-        if (!empty($this->id_tipo_documento)) {
-            $id_tipo_documento = "and a.id_tipo_documento = '{$this->id_tipo_documento}'";
-        }
-
-        $id_departamento = "";
-        if (!empty($this->id_departamento)) {
-            $id_departamento = "and a.id_departamento = '{$this->id_departamento}'";
-        }
-
-        $clave_calidad = "";
-        if (!empty($this->clave_calidad)) {
-            $clave_calidad = "and a.clave_calidad = '{$this->clave_calidad}'";
-        }
-
-        $nombre = "";
-        if (!empty($this->nombre)) {
-            $nombre = "and a.nombre = '{$this->nombre}'";
-        }
-
-        $sql = "SELECT * FROM `bitacora`
-
+        $sql = "SELECT a.*, b.nombre_usuario FROM `bitacora` as a 
+        left join usuarios as b on a.usuario = b.id
         where 1=1
-         {$sqlForm} {$fecha_creacion} {$fecha_actualizacion}
-         {$id_estatus} {$id_proceso} {$id_tipo_documento} 
-         {$id_departamento} {$clave_calidad} {$nombre}";
+         {$sqlForm} {$fecha_betwen} 
+         {$modulo} {$operacion} ";
         return $this->Query($sql);
     }
 
@@ -176,7 +152,7 @@ class bitacora extends AW
     }
 
     public function Agregar()
-    {
+    {   
         $sql = "INSERT INTO `bitacora`
         (`id`,`id_estatus`,`id_proceso`,`id_tipo_documento`,`id_departamento`,`clave_calidad`,
         `nombre`,`fecha_creacion`,`usr_creacion`,`estatus`)

@@ -41,8 +41,8 @@ $fecha_actual = date("d-m-Y");
 <script type="text/javascript">
     $(document).ready(function(e) {
         Listado();
-        /*$('#fecha_inicial').change(Listado);
-        $('#fecha_final').change(Listado);*/
+        $('#fecha_inicial').change(Listado);
+        $('#fecha_final').change(Listado);
 
         $("#btnGuardar").button().click(function(e) {
 
@@ -128,6 +128,7 @@ $fecha_actual = date("d-m-Y");
     }
 
     function Editar(id, nombre, id_empleado, empleado) {
+        $("#btnGuardar").show();
         switch (nombre) {
             case 'Agregar':
                 $.ajax({
@@ -147,8 +148,28 @@ $fecha_actual = date("d-m-Y");
                     backdrop: "true"
                 });
                 break;
+                
+            case 'Actualizar':
+                $.ajax({
+                    data: "nombre=" + nombre + "&id=" + id,
+                    type: "POST",
+                    url: "app/views/default/modules/modulos/documentacion/m.documentacion.formulario.php",
+                    beforeSend: function() {
+                        $("#divFormulario").html(
+                            '<div class="container"><center><img src="app/views/default/img/loading.gif" border="0"/><br />Cargando formulario, espere un momento por favor...</center></div>'
+                        );
+                    },
+                    success: function(datos) {
+                        $("#divFormulario").html(datos);
+                    }
+                });
+                $("#myModal").modal({
+                    backdrop: "true"
+                });
+                break;
 
             case 'Ver':
+                $("#btnGuardar").hide();
                 $.ajax({
                     data: "nombre=" + nombre + "&id=" + id+"#toolbar=0",
                     type: "POST",
@@ -167,6 +188,7 @@ $fecha_actual = date("d-m-Y");
                 });
                 break;
             case 'Imprimir':
+                $("#btnGuardar").hide();
                 $.ajax({
                     data: "nombre=" + nombre + "&id=" + id+"#downloads=0",
                     type: "POST",
