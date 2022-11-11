@@ -40,9 +40,6 @@ $fecha_actual = date("d-m-Y");
 <?php require_once('app/views/default/script_h.html'); ?>
 <script type="text/javascript">
     $(document).ready(function(e) {
-        Listado();
-        $('#fecha_inicial').change(Listado);
-        $('#fecha_final').change(Listado);
 
         $("#btnGuardar").button().click(function(e) {
 
@@ -89,6 +86,25 @@ $fecha_actual = date("d-m-Y");
                         Alert("", $(elemento).attr("description"), "warning", 900, false);
                         Empty(elemento.id);
                         frmTrue = false;
+                    } else {
+                        if ($("#fecha_creacion_inicio").val() <= $("#fecha_creacion_fin").val()) {
+                            frmTrue = true;
+                        } else {
+                            Alert("", "La fecha inicio debe ser menor o igual a la fecha final", "warning", 1200, false);
+                            frmTrue = false;
+                        }
+
+                        if ($("#fecha_actualizacion_inicio").val() != "" || $("#fecha_actualizacion_fin").val() != "") {
+                            $("#fecha_actualizacion_inicio").addClass("busqueda");
+                            $("#fecha_actualizacion_fin").addClass("busqueda");
+                            if ($("#fecha_actualizacion_inicio").val() <= $("#fecha_actualizacion_fin").val()) {
+                                frmTrue = true;
+                            } else {
+                                Alert("", "La fecha inicio debe ser menor o igual a la fecha final", "warning", 1200, false);
+                                frmTrue = false;
+                            }
+                        }
+
                     }
                 }
             });
@@ -102,8 +118,10 @@ $fecha_actual = date("d-m-Y");
 
     function Listado() {
         var jsonDatos = {
-            "fecha_creacion": $("#fecha_creacion_").val(),
-            "fecha_actualizacion": $("#fecha_actualizacion_").val(),
+            "fecha_creacion_inicio": $("#fecha_creacion_inicio").val(),
+            "fecha_creacion_fin": $("#fecha_creacion_fin").val(),
+            "fecha_actualizacion_inicio": $("#fecha_actualizacion_inicio").val(),
+            "fecha_actualizacion_fin": $("#fecha_actualizacion_fin").val(),
             "id_estatus": $("#id_estatus_").val(),
             "id_proceso": $("#id_proceso_").val(),
             "id_tipo_documento": $("#id_tipo_documento_").val(),
@@ -148,7 +166,7 @@ $fecha_actual = date("d-m-Y");
                     backdrop: "true"
                 });
                 break;
-                
+
             case 'Actualizar':
                 $.ajax({
                     data: "nombre=" + nombre + "&id=" + id,
@@ -171,7 +189,7 @@ $fecha_actual = date("d-m-Y");
             case 'Ver':
                 $("#btnGuardar").hide();
                 $.ajax({
-                    data: "nombre=" + nombre + "&id=" + id+"#toolbar=0",
+                    data: "nombre=" + nombre + "&id=" + id + "#toolbar=0",
                     type: "POST",
                     url: "app/views/default/modules/modulos/documentacion/m.documentacion.ver.php",
                     beforeSend: function() {
@@ -190,7 +208,7 @@ $fecha_actual = date("d-m-Y");
             case 'Imprimir':
                 $("#btnGuardar").hide();
                 $.ajax({
-                    data: "nombre=" + nombre + "&id=" + id+"#downloads=0",
+                    data: "nombre=" + nombre + "&id=" + id + "#downloads=0",
                     type: "POST",
                     url: "app/views/default/modules/modulos/documentacion/m.documentacion.ver.php",
                     beforeSend: function() {
@@ -242,16 +260,38 @@ $fecha_actual = date("d-m-Y");
                                     <div class="col">
                                         <div class="form-group">
                                             <strong class="">Fecha de Creación:</strong>
-                                            <div class="form-group">
-                                                <input type="date" aria-describedby="" description="Seleccione fecha de creación" id="fecha_creacion_" value="" required name="fecha_creacion_" class="form-control " />
+                                            <div class="row">
+                                                <div class="col">
+                                                    <strong class="">Fecha Inicial:</strong>
+                                                    <div class="form-group">
+                                                        <input type="date" aria-describedby="" description="Seleccione fecha de inicio" id="fecha_creacion_inicio" value="" required name="fecha_creacion_inicio" class="form-control busqueda" />
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <strong class="">Fecha Final:</strong>
+                                                    <div class="form-group">
+                                                        <input type="date" aria-describedby="" description="Seleccione fecha de fin" id="fecha_creacion_fin" value="" required name="fecha_creacion_fin" class="form-control busqueda" />
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="form-group">
                                             <strong class="">Fecha de Revision o Actualización:</strong>
-                                            <div class="form-group">
-                                                <input type="date" aria-describedby="" description="Seleccione fecha de revisión o actualización" id="fecha_actualizacion_" value="" required name="fecha_actualizacion_" class="form-control " />
+                                            <div class="row">
+                                                <div class="col">
+                                                    <strong class="">Fecha Inicial:</strong>
+                                                    <div class="form-group">
+                                                        <input type="date" aria-describedby="" description="Seleccione fecha inicial de revisión o actualización" id="fecha_actualizacion_inicio" value="" required name="fecha_actualizacion_inicio" class="form-control " />
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <strong class="">Fecha Final:</strong>
+                                                    <div class="form-group">
+                                                        <input type="date" aria-describedby="" description="Seleccione fecha final de revisión o actualización" id="fecha_actualizacion_fin" value="" required name="fecha_actualizacion_fin" class="form-control " />
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -329,7 +369,6 @@ $fecha_actual = date("d-m-Y");
                                                                 echo "<option value='{$campo->id}' >{$campo->nombre}</option>\n";
                                                             }
                                                         }
-                                                    
                                                     }
                                                     ?>
                                                 </select>

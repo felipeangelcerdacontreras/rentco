@@ -27,6 +27,12 @@ class documentacion extends AW
     var $form;
 
     public $id_documento;
+    var $fecha_creacion_inicio;
+    var $fecha_creacion_fin;
+
+    var $fecha_actualizacion_inicio;
+    var $fecha_actualizacion_fin;
+
 
     public function __construct($sesion = true, $datos = NULL)
     {
@@ -53,13 +59,13 @@ class documentacion extends AW
         }
 
         $fecha_creacion = "";
-        if (!empty($this->fecha_creacion)) {
-            $fecha_creacion = "and a.fecha_creacion = '{$this->fecha_creacion}'";
+        if (!empty($this->fecha_creacion_inicio) && !empty($this->fecha_creacion_fin)) {
+            $fecha_creacion = "and a.fecha_creacion >= '{$this->fecha_creacion_inicio}' and a.fecha_creacion <= '{$this->fecha_creacion_fin}'";
         }
 
         $fecha_actualizacion = "";
-        if (!empty($this->fecha_actualizacion)) {
-            $fecha_actualizacion = "and a.fecha_actualizacion = '{$this->fecha_actualizacion}'";
+        if (!empty($this->fecha_actualizacion_inicio) && !empty($this->fecha_actualizacion_fin)) {
+            $fecha_actualizacion = "and a.fecha_actualizacion >= '{$this->fecha_actualizacion_inicio}' and a.fecha_actualizacion <= '{$this->fecha_actualizacion_fin}'";
         }
 
         $id_estatus = "";
