@@ -14,7 +14,7 @@ $oDocumentacion = new documentacion(true, $_POST);
 $sesion = $_SESSION[$oDocumentacion->NombreSesion];
 //print_r($sesion);
 $lstDocumentacion = $oDocumentacion->Listado();
-
+$lstDocDepa = $oDocumentacion->SubQuery();
 //print_r($lstDocumentacion);
 
 $oUsuarios = new Usuarios();
@@ -69,34 +69,41 @@ $aPermisos = empty($oUsuarios->perfiles_id) ? array() : explode("@", $oUsuarios-
                 <tbody>
                     <?php
                     if (count($lstDocumentacion) > 0) {
+
                         foreach ($lstDocumentacion as $idx => $campo) {
                             if ($sesion->nvl_usuario > 1) {
                                 foreach ($lstPermisos as $idx => $permiso) {
-                                    if ($permiso->id_puesto == $sesion->puesto && $permiso->id_documento == $campo->id) {
 
+                                    if ($permiso->id_puesto == $sesion->puesto && $permiso->id_documento == $campo->id) {
+                                            if (count($lstDocDepa) > 0) {
+                                                foreach ($lstDocDepa as $idx => $depa) {
+                                                    if ($campo->id == $depa->id_documento) {
                     ?>
-                                        <tr>
-                                            <td style="text-align: center;"><?= $campo->fecha_creacion; ?></td>
-                                            <td style="text-align: center;"><?= $campo->fecha_actualizacion ?></td>
-                                            <td style="text-align: center;"><?= $campo->estatus_nombre ?></td>
-                                            <td style="text-align: center;"><?= $campo->proceso ?></td>
-                                            <td style="text-align: center;"><?= $campo->tipo_documento ?></td>
-                                            <td style="text-align: center;"><?= $campo->departamento ?></td>
-                                            <td style="text-align: center;text-transform:uppercase;"><?= $campo->clave_calidad ?></td>
-                                            <td style="text-align: center;"><?= $campo->nombre ?></td>
-                                            <td style="text-align: center;">
-                                                <?php if ($permiso->ver == "ver") { ?>
-                                                    <a class="btn btn-outline-sm" style="width:33%" href="javascript:Editar('<?= $campo->url_pdf ?>','Ver')"><img src="app/views/default/img/view.png" data-toggle="tooltip" title="" data-original-title="Ver"> </a>
-                                                <?php } ?>
-                                                <?php if ($permiso->editar == "editar") { ?>
-                                                    <a class="btn btn-outline-sm" style="width:25%" href="javascript:Editar('<?= $campo->url_pdf ?>','Imprimir')"><img src="app/views/default/img/printer.png" data-toggle="tooltip" title="" data-original-title="Imprimir" style="width: 80%;height: 80%;"> </a>
-                                                <?php } ?>
-                                                <?php if ($permiso->imprimir == "imprimir") { ?>
-                                                    <a class="btn btn-outline-sm" style="width:33%" href="javascript:Editar('<?= $campo->id ?>','Agregar')"><img src="app/views/default/img/edit_22x22.png" data-toggle="tooltip" title="" data-original-title="Editar"></a>
-                                                <?php } ?>
-                                            </td>
-                                        </tr>
+                                                    <tr>
+                                                        <td style="text-align: center;"><?= $campo->fecha_creacion; ?></td>
+                                                        <td style="text-align: center;"><?= $campo->fecha_actualizacion ?></td>
+                                                        <td style="text-align: center;"><?= $campo->estatus_nombre ?></td>
+                                                        <td style="text-align: center;"><?= $campo->proceso ?></td>
+                                                        <td style="text-align: center;"><?= $campo->tipo_documento ?></td>
+                                                        <td style="text-align: center;"><?= $campo->departamento ?></td>
+                                                        <td style="text-align: center;text-transform:uppercase;"><?= $campo->clave_calidad ?></td>
+                                                        <td style="text-align: center;"><?= $campo->nombre ?></td>
+                                                        <td style="text-align: center;">
+                                                            <?php if ($permiso->ver == "ver") { ?>
+                                                                <a class="btn btn-outline-sm" style="width:33%" href="javascript:Editar('<?= $campo->url_pdf ?>','Ver')"><img src="app/views/default/img/view.png" data-toggle="tooltip" title="" data-original-title="Ver"> </a>
+                                                            <?php } ?>
+                                                            <?php if ($permiso->editar == "editar") { ?>
+                                                                <a class="btn btn-outline-sm" style="width:25%" href="javascript:Editar('<?= $campo->url_pdf ?>','Imprimir')"><img src="app/views/default/img/printer.png" data-toggle="tooltip" title="" data-original-title="Imprimir" style="width: 80%;height: 80%;"> </a>
+                                                            <?php } ?>
+                                                            <?php if ($permiso->imprimir == "imprimir") { ?>
+                                                                <a class="btn btn-outline-sm" style="width:33%" href="javascript:Editar('<?= $campo->id ?>','Agregar')"><img src="app/views/default/img/edit_22x22.png" data-toggle="tooltip" title="" data-original-title="Editar"></a>
+                                                            <?php } ?>
+                                                        </td>
+                                                    </tr>
                                 <?php
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             } else {

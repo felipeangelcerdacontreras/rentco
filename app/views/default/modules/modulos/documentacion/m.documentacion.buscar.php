@@ -86,7 +86,7 @@ $fecha_actual = date("d-m-Y");
                         Alert("", $(elemento).attr("description"), "warning", 900, false);
                         Empty(elemento.id);
                         frmTrue = false;
-                    } else {
+                    }  else {
                         if ($("#fecha_creacion_inicio").val() <= $("#fecha_creacion_fin").val()) {
                             frmTrue = true;
                         } else {
@@ -95,8 +95,6 @@ $fecha_actual = date("d-m-Y");
                         }
 
                         if ($("#fecha_actualizacion_inicio").val() != "" || $("#fecha_actualizacion_fin").val() != "") {
-                            $("#fecha_actualizacion_inicio").addClass("busqueda");
-                            $("#fecha_actualizacion_fin").addClass("busqueda");
                             if ($("#fecha_actualizacion_inicio").val() <= $("#fecha_actualizacion_fin").val()) {
                                 frmTrue = true;
                             } else {
@@ -264,13 +262,13 @@ $fecha_actual = date("d-m-Y");
                                                 <div class="col">
                                                     <strong class="">Fecha Inicial:</strong>
                                                     <div class="form-group">
-                                                        <input type="date" aria-describedby="" description="Seleccione fecha de inicio" id="fecha_creacion_inicio" value="" required name="fecha_creacion_inicio" class="form-control busqueda" />
+                                                        <input type="date" aria-describedby="" description="Seleccione fecha de inicio" id="fecha_creacion_inicio" value="" required name="fecha_creacion_inicio" class="form-control " />
                                                     </div>
                                                 </div>
                                                 <div class="col">
                                                     <strong class="">Fecha Final:</strong>
                                                     <div class="form-group">
-                                                        <input type="date" aria-describedby="" description="Seleccione fecha de fin" id="fecha_creacion_fin" value="" required name="fecha_creacion_fin" class="form-control busqueda" />
+                                                        <input type="date" aria-describedby="" description="Seleccione fecha de fin" id="fecha_creacion_fin" value="" required name="fecha_creacion_fin" class="form-control " />
                                                     </div>
                                                 </div>
                                             </div>

@@ -50,6 +50,16 @@ class documentacion extends AW
             }
         }
     }
+    public function SubQuery() {
+        $id_departamento = "";
+        if (!empty($this->id_departamento)) {
+            $id_departamento = " and a.id_departamento = '{$this->id_departamento}'";
+        }
+
+        $sql = "SELECT max(a.id) as id_documento from documentacion as a 
+        where 1=1 {$id_departamento} group by a.clave_calidad order by a.id, a.clave_calidad desc ";
+         return $this->Query($sql);
+    }
 
     public function Listado()
     {
@@ -108,6 +118,7 @@ class documentacion extends AW
          {$sqlForm} {$fecha_creacion} {$fecha_actualizacion}
          {$id_estatus} {$id_proceso} {$id_tipo_documento} 
          {$id_departamento} {$clave_calidad} {$nombre}";
+
         return $this->Query($sql);
     }
 
@@ -244,14 +255,21 @@ class documentacion extends AW
             }
         }
 
+        $sFecha = "";
+        $aFecha = "";
+        if (! empty($this->fecha_actualizacion)) {
+            $sFecha = ",`fecha_actualizacion`";
+            $aFecha = ",'".$this->fecha_creacion."'";
+        }
+
 
         $sql = "INSERT INTO `documentacion`
         (`id`,`id_estatus`,`id_proceso`,`id_tipo_documento`,`id_departamento`,`id_puesto`,`clave_calidad`,
-        `nombre`,`comentarios`,`fecha_creacion`,`usr_creacion`,`estatus`)
+        `nombre`,`comentarios`,`fecha_creacion`,`usr_creacion`,`estatus`{$sFecha})
         VALUES
         (0,'{$this->id_estatus}','{$this->id_proceso}','{$this->id_tipo_documento}','{$this->id_departamento}','{$sPuestos}',
         '{$this->clave_calidad}','{$this->nombre}','{$this->comentarios}','".$this->fecha_creacion."',
-        '{$this->user_id}','1');";
+        '{$this->user_id}','1' {$aFecha});";
 
         $bResultado = $this->NonQuery($sql);
 
@@ -431,7 +449,7 @@ class documentacion extends AW
                     return 2;
                 }
 
-                $nomArchivo = $clave_calidad.date('Y-m-d');
+                $nomArchivo = $clave_calidad.date('Y-m-d  H:m');
                 $nomArchivo .= ".";
                 $nomArchivo .= $extArchivo;
                 $archivoDir .= $nomArchivo;
