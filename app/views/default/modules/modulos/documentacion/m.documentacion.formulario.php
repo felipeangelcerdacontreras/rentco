@@ -472,7 +472,7 @@ if ($nombre == "Actualizar"){
                         </div>
                     </div>
                 </div>
-                <div class="col">
+                <div class="col-3">
                     <div class="form-group">
                         <strong class="">Clave de Calidad:</strong>
                         <div class="form-group">
