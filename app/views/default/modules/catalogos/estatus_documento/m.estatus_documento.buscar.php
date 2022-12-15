@@ -62,7 +62,7 @@ $oEstatus_documento->ValidaNivelUsuario("estatus_documento");
     function Editar(id, nombre) {
         if (nombre == "Desactivar") {
             $.ajax({
-                data: "accion=Desactivar&id=" + id + "&estatus= 0",
+                data: "accion=Desactivar&id=" + id + "&estatus=0",
                 type: "POST",
                 url: "app/views/default/modules/catalogos/estatus_documento/m.estatus_documento.procesa.php",
                 beforeSend: function() {
@@ -75,7 +75,7 @@ $oEstatus_documento->ValidaNivelUsuario("estatus_documento");
             });
         } else if (nombre == "Activar") {
             $.ajax({
-                data: "accion=Desactivar&id=" + id + "&estatus= 1",
+                data: "accion=Desactivar&id=" + id + "&estatus=1",
                 type: "POST",
                 url: "app/views/default/modules/catalogos/estatus_documento/m.estatus_documento.procesa.php",
                 beforeSend: function() {

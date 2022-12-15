@@ -62,7 +62,7 @@ $oPuestos->ValidaNivelUsuario("puestos");
     function Editar(id, nombre) {
         if (nombre == "Desactivar") {
             $.ajax({
-                data: "accion=Desactivar&id=" + id + "&estatus= 0",
+                data: "accion=Desactivar&id=" + id + "&estatus=0",
                 type: "POST",
                 url: "app/views/default/modules/catalogos/puestos/m.puestos.procesa.php",
                 beforeSend: function() {
@@ -75,7 +75,7 @@ $oPuestos->ValidaNivelUsuario("puestos");
             });
         } else if (nombre == "Activar") {
             $.ajax({
-                data: "accion=Desactivar&id=" + id + "&estatus= 1",
+                data: "accion=Desactivar&id=" + id + "&estatus=1",
                 type: "POST",
                 url: "app/views/default/modules/catalogos/puestos/m.puestos.procesa.php",
                 beforeSend: function() {

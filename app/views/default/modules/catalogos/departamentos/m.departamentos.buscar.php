@@ -62,7 +62,7 @@ $oDepartamentos->ValidaNivelUsuario("departamentos");
     function Editar(id, nombre) {
         if (nombre == "Desactivar") {
             $.ajax({
-                data: "accion=Desactivar&id=" + id + "&estatus= 0",
+                data: "accion=Desactivar&id=" + id + "&estatus=0",
                 type: "POST",
                 url: "app/views/default/modules/catalogos/departamentos/m.departamentos.procesa.php",
                 beforeSend: function() {
@@ -75,7 +75,7 @@ $oDepartamentos->ValidaNivelUsuario("departamentos");
             });
         } else if (nombre == "Activar") {
             $.ajax({
-                data: "accion=Desactivar&id=" + id + "&estatus= 1",
+                data: "accion=Desactivar&id=" + id + "&estatus=1",
                 type: "POST",
                 url: "app/views/default/modules/catalogos/departamentos/m.departamentos.procesa.php",
                 beforeSend: function() {
