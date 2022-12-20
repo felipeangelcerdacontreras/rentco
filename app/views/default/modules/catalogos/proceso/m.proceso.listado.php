@@ -14,8 +14,30 @@ $lstproceso = $oProceso->Listado();
 <script type="text/javascript">
     $(document).ready(function(e) {
         $("#dataTable").DataTable({
-            scrollY: '300px'
+            scrollY: '300px',
+            dom: 'Bfrtip',
+                buttons: [{
+                    extend: 'excel',
+                    title: 'Reporte de proceso',
+                    text: 'Exportar a Excel',
+                    exportOptions: {
+                        columns: [0, 1]
+                    }
+                },
+                    
+                {
+                    extend: 'pdfHtml5', 
+                    title: 'Reporte de proceso',
+                    text: 'Exportar a pdf',
+                    exportOptions: {
+                        columns: [0, 1]
+                    }
+                    
+                }],
         });
+
+        $(".buttons-excel").addClass("btn btn-outline-success");
+        $(".buttons-pdf").addClass("btn btn-outline-danger");
 
         $("#btnAgregar").button().click(function(e) {
             Editar("", "Agregar");

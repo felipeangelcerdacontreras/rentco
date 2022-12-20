@@ -30,8 +30,30 @@ $aPermisos = empty($oUsuarios->perfiles_id) ? array() : explode("@", $oUsuarios-
 <script type="text/javascript">
     $(document).ready(function(e) {
         $("#dataTable").DataTable({
-            scrollY: '350px'
+            scrollY: '350px',
+            dom: 'Bfrtip',
+                buttons: [{
+                    extend: 'excel',
+                    title: 'Reporte de documentación',
+                    text: 'Exportar a Excel',
+                    exportOptions: {
+                        columns: [0, 1, 2, 4, 5, 6, 7]
+                    }
+                },
+                    
+                {
+                    extend: 'pdfHtml5', 
+                    title: 'Reporte de documentación',
+                    text: 'Exportar a pdf',
+                    exportOptions: {
+                        columns: [0, 1, 2, 4, 5, 6, 7]
+                    }
+                    
+                }],
         });
+
+        $(".buttons-excel").addClass("btn btn-outline-success");
+        $(".buttons-pdf").addClass("btn btn-outline-danger");
 
         $("#btnAgregar").button().click(function(e) {
             Editar("", "Agregar");
