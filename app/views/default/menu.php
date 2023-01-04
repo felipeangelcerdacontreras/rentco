@@ -2,6 +2,7 @@
 $_SITE_PATH = $_SERVER["DOCUMENT_ROOT"] . "/" . explode("/", $_SERVER["PHP_SELF"])[1] . "/";
 require_once($_SITE_PATH . "/Configuracion.class.php");
 require_once($_SITE_PATH . "/app/model/usuarios.class.php");
+require_once($_SITE_PATH . "/app/model/permisos.class.php");
 
 $oConfig = new Configuracion();
 
@@ -11,7 +12,11 @@ $oUsuario = new usuarios();
 $oUsuario->id = $sesion->id;
 $oUsuario->Informacion();
 
-$aPermisos = empty($oUsuario->perfiles_id) ? array() : explode("@", $oUsuario->perfiles_id);
+$oPermisos = new permisos();
+$oPermisos->puesto = $sesion->puesto;
+$oPermisos->permisos();
+
+$aPermisos = empty($oPermisos->perfiles_id) ? array() : explode("@", $oPermisos->perfiles_id);
 ?>
 <style>
     .bg-gradient-primary {
@@ -52,6 +57,9 @@ $aPermisos = empty($oUsuario->perfiles_id) ? array() : explode("@", $oUsuario->p
                 <?php } ?>
                 <?php if ($oUsuario->ExistePermiso("usuarios", $aPermisos) === true) { ?>
                     <a class='collapse-item' href='index.php?action=usuarios'>Usuarios</a>
+                <?php } ?>
+                <?php if ($oUsuario->ExistePermiso("permisos", $aPermisos) === true) { ?>
+                    <a class='collapse-item' href='index.php?action=permisos'>Permisos</a>
                 <?php } ?>
                 <?php if ($oUsuario->ExistePermiso("estatus_documento", $aPermisos) === true) { ?>
                     <a class='collapse-item' href='index.php?action=estatus_documento'>Estatus documento</a>

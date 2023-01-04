@@ -6,16 +6,10 @@
 $_SITE_PATH = $_SERVER["DOCUMENT_ROOT"] . "/" . explode("/", $_SERVER["PHP_SELF"])[1] . "/";
 require_once($_SITE_PATH . "/app/model/principal.class.php");
 
-class usuarios extends AW {
+class permisos extends AW {
 
     var $id;
-    var $nombre_usuario;
-    var $usuario;
-    var $correo;
-    var $numero_economico;
     var $nvl_usuario;
-    var $clave_usuario;
-    var $clave_texto;
     var $puesto;
     var $user_id;
     var $estado;
@@ -39,17 +33,32 @@ class usuarios extends AW {
     }
 
     public function Listado() {
-        $sql = "SELECT a.nombre_usuario, b.nombre as puesto, c.nombre as departamento, a.estado, a.id, a.clave_texto FROM usuarios as a 
+        $sql = "SELECT b.nombre as puesto, c.nombre as departamento, a.estado, a.id  FROM permisos as a
         left join puestos as b on  a.puesto = b.id
         left join departamentos as c on b.id_departamento = c.id;  ";
         //echo nl2br($sql);
         return $this->Query($sql);
-        
     }
 
     public function Informacion() {
 
-        $sql = "select * from usuarios where  id='{$this->id}'";
+        $sql = "select * from permisos where  id='{$this->id}'";
+        $res = parent::Query($sql);
+
+        if (!empty($res) && !($res === NULL)) {
+            foreach ($res [0] as $idx => $valor) {
+                $this->{$idx} = $valor;
+            }
+        } else {
+            $res = NULL;
+        }
+
+        return $res;
+    }
+
+    public function permisos() {
+
+        $sql = "select * from permisos where  puesto='{$this->puesto}'";
         $res = parent::Query($sql);
 
         if (!empty($res) && !($res === NULL)) {
@@ -64,7 +73,7 @@ class usuarios extends AW {
     }
 
     public function Existe() {
-        $sql = "select id from usuarios where id='{$this->id}'";
+        $sql = "select id from permisos where id='{$this->id}'";
         $res = $this->Query($sql);
 
         $bExiste = false;
@@ -77,19 +86,19 @@ class usuarios extends AW {
 
     public function Actualizar() {
 
-        $sqlPass = "";
-        if (!empty($this->clave_usuario)) {
-            $sqlPass = ", clave='{$this->Encripta($this->clave_usuario)}', clave_texto='{$this->clave_usuario}'";
+        $sPermisos = "";
+        if (! empty($this->perfiles_id)) {
+            foreach ($this->perfiles_id as $idx => $valor) {
+                $sPermisos .= $valor . "@";
+            }
         }
 
         $sql = "update
-                    usuarios
+                    permisos
                 set
-                    nombre_usuario = '{$this->nombre_usuario}',
-                    correo = '{$this->correo}',
+                    perfiles_id = '{$sPermisos}',
                     puesto = '{$this->puesto}',
                     nvl_usuario = '{$this->nvl_usuario}'
-                    {$sqlPass}
                 where
                   id='{$this->id}'";
 
@@ -99,7 +108,7 @@ class usuarios extends AW {
             $sqlBitacora = "INSERT INTO `mli`.`bitacora`
             (`id`,`modulo`,`operacion`,`modificacion`,`url_pdf`,`url_word`,`usuario`,`fecha`)
             VALUES
-            ('0','USUARIOS','ACTUALIZACION','°Nombre: {$this->nombre_usuario}°Correo: {$this->correo}°Puesto: {$this->puesto}°clave_texto: {$this->clave_usuario})',NULL,NULL,'{$this->user_id}',NOW());";
+            ('0','permisos','ACTUALIZACION','{$sPermisos}°Puesto :{$this->puesto}° Nivel: {$this->nvl_usuario})',NULL,NULL,'{$this->user_id}',NOW());";
 
             $this->NonQuery($sqlBitacora);
         }
@@ -109,22 +118,28 @@ class usuarios extends AW {
     }
 
     public function Agregar() {
+        $sPermisos = "";
+        if (!empty($this->perfiles_id)) {
+            foreach ($this->perfiles_id as $idx => $valor) {
+                $sPermisos .= $valor . "@";
+            }
+        }
 
-        $sql = "insert into usuarios
-                (`id`,`nombre_usuario`,`correo`,`clave`,`clave_texto`,`puesto`,`estado`,`usuario_creacion`,`fecha_creacion`)
+        $sql = "insert into permisos
+                (`id`,`perfiles_id`,`nvl_usuario`,`puesto`,`estado`,`usuario_creacion`,`fecha_creacion`)
                 values
-                ('0','{$this->nombre_usuario}','{$this->correo}','{$this->Encripta($this->clave_usuario)}','{$this->clave_usuario}','{$this->puesto}', '1', '{$this->user_id}', now())";
+                ('0','{$sPermisos}','{$this->nvl_usuario}','{$this->puesto}', '1', '{$this->user_id}', now())";
         $bResultado = $this->NonQuery($sql);
 
         if ($bResultado) {
             $sqlBitacora = "INSERT INTO `mli`.`bitacora`
             (`id`,`modulo`,`operacion`,`modificacion`,`url_pdf`,`url_word`,`usuario`,`fecha`)
             VALUES
-            ('0','USUARIOS','AGREGADO','°Nombre: {$this->nombre_usuario}°Correo: {$this->correo}°Puesto: {$this->puesto}°clave_texto: {$this->clave_usuario})',NULL,NULL,'{$this->user_id}',NOW());";
+            ('0','permisos','AGREGADO','{$sPermisos}°Puesto :{$this->puesto}° Nivel: {$this->nvl_usuario})',NULL,NULL,'{$this->user_id}',NOW());";
 
             $this->NonQuery($sqlBitacora);
             
-            $sql1 = "select id from usuarios order by id desc limit 1";
+            $sql1 = "select id from permisos order by id desc limit 1";
             $res = $this->Query($sql1);
             
             $this->id = $res[0]->id;
@@ -136,7 +151,7 @@ class usuarios extends AW {
     public function Desactivar() {
 
         $sql = "update
-                    usuarios
+                    permisos
                 set
                     estado = '{$this->estado}'
                 where

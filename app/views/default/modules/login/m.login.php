@@ -143,7 +143,7 @@ $_SITE_PATH = $_SERVER["DOCUMENT_ROOT"] . "/" . explode("/", $_SERVER["PHP_SELF"
 
                                                         <div class="form-outline mb-4">
                                                             <input type="text" id="usr" name="usr" class="form-control form-control-lg">
-                                                            <label class="form-label" for="usr" style="margin-left: 0px;">Usuario</label>
+                                                            <label class="form-label" for="usr" style="margin-left: 0px;">Correo</label>
                                                             <div class="form-notch">
                                                                 <div class="form-notch-leading" style="width: 9px;"></div>
                                                                 <div class="form-notch-middle" style="width: 88.8px;"></div>

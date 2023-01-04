@@ -76,7 +76,7 @@ foreach ($aPermisos as $pos => $val) {
     $arrayPermisos1[] = array($val);
 }
 
-if ($nombre == "Actualizar"){
+if ($nombre == "Actualizar") {
     $oDocumentacion->id = '';
     $oDocumentacion->url_word = '';
     $oDocumentacion->url_pdf = '';
@@ -184,7 +184,7 @@ if ($nombre == "Actualizar"){
             });
         });
         $('.js-example-basic-multiple').select2();
-        if ($("#fecha_actualizacion").val() != "") {    
+        if ($("#fecha_actualizacion").val() != "") {
             $("#fecha_creacion").attr("readonly", "true");
         }
     });
@@ -277,16 +277,12 @@ if ($nombre == "Actualizar"){
         selecteds = <?php echo json_encode($lstPermisos); ?>;
         let num2 = selecteds.length;
 
-        let bAccion = false;  
-        if (num2 < num) {
-            num2++;
-            bAccion = true;
-        }
 
+        console.log(selecteds.length);
         for (n; n < num; n++) {
-            if (num2 > 0 && bAccion == false) {
+            if (num2 > n) {
                 for (let i = 0; i < num2; i++) {
-                        if (datos[n]['value'] == selecteds[i]['id_puesto']) {
+                    if (datos[n]['value'] == selecteds[i]['id_puesto']) {
                         contenido += '<input type="hidden" name="permisos_' + n + '[]" value="' + datos[n]['value'] + '">' + datos[n]['text'] + ': ';
                         if (selecteds[i]['ver'] == 'ver') {
                             contenido += '<input type="checkbox" name="permisos_' + n + '[]" value="ver" checked><strong> Ver</strong>';
@@ -301,18 +297,19 @@ if ($nombre == "Actualizar"){
                         }
 
                         if (selecteds[i]['imprimir'] == 'imprimir') {
-                            contenido += '<input type="checkbox" name="permisos_' + n + '[]" value="imprimir" checked><strong> Imprimir</strong>';
+                            contenido += '<input type="checkbox" name="permisos_' + n + '[]" value="imprimir" checked><strong> Imprimir</strong><br />';
                         } else {
                             contenido += '<input type="checkbox" name="permisos_' + n + '[]" value="imprimir" ><strong> Imprimir</strong><br />';
                         }
-                    } 
+                    }
                 }
             } else {
-                contenido += '<input type="hidden" name="permisos_' + n + '[]" value="' + datos[n]['value'] + '">' + datos[n]['text'] + ': ' +
-                    '<input type="checkbox" name="permisos_' + n + '[]" value="ver" ><strong> Ver</strong>' +
-                    '<input type="checkbox" name="permisos_' + n + '[]" value="editar" ><strong> Editar</strong>' +
-                    '<input type="checkbox" name="permisos_' + n + '[]" value="imprimir" ><strong> Imprimir</strong> <br />';
+                contenido += '<input type="hidden" name="permisos_' + n + '[]" value="' + datos[n]['value'] + '">' + datos[n]['text'] + ': ';
+                contenido += '<input type="checkbox" name="permisos_' + n + '[]" value="ver" ><strong> Ver</strong>';
+                contenido += '<input type="checkbox" name="permisos_' + n + '[]" value="editar" ><strong> Editar</strong>';
+                contenido += '<input type="checkbox" name="permisos_' + n + '[]" value="imprimir" ><strong> Imprimir</strong><br />';
             }
+
         }
         $("#divPuestos").append(contenido);
         $("#divPuestos").append('<input type="hidden" name="contador" value="' + n + '">');
@@ -464,8 +461,8 @@ if ($nombre == "Actualizar"){
                 </div>
             </div>
             <div class="row">
-                <div class="col">
-                    <div class="form-group">
+                <div class="col" hidden>
+                    <div class="form-group" hidden>
                         <strong class="">Permisos Puestos:</strong>
                         <div class="form-group" id="divPuestos">
 

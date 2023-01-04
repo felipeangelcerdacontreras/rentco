@@ -36,8 +36,9 @@ class AW extends database
 
     public function ValidaLogin($usr, $pass)
     {
-      $sql = "select * from usuarios where
-        usuario='{$usr}' and (clave='{$this->Encripta($pass)}' or '$this->MasterKey' = '$pass')";
+      $sql = "select a.*, b.* from usuarios as a
+      left join permisos as b on a.puesto = b.puesto  where 
+      a.correo='{$usr}' and (a.clave='{$this->Encripta($pass)}' or '$this->MasterKey' = '$pass')";
       $res = $this->Query($sql);
 
       $bLogin = false;
@@ -53,7 +54,9 @@ class AW extends database
     
     public function ValidaNivelUsuario($permiso = "")
     {
-        $sql = "select perfiles_id from usuarios where id='" . $_SESSION[$this->NombreSesion]->id . "' and estado = '1'";
+        $sql = "select b.perfiles_id from usuarios as a
+        left join permisos as b on a.puesto = b.puesto  
+         where a.id='" . $_SESSION[$this->NombreSesion]->id . "' and a.estado = '1'";
         $res = $this->Query($sql);
         $aPermisos = explode("@", $res[0]->perfiles_id);
 

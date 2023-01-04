@@ -19,6 +19,11 @@ class mvc_controller_administrador extends mvc_controller
     {
           include_once("app/views/default/modules/catalogos/usuarios/m.usuarios.buscar.php");
     }
+
+    public function permisos()
+    {
+          include_once("app/views/default/modules/catalogos/permisos/m.permisos.buscar.php");
+    }
     
 }
 

@@ -28,6 +28,9 @@ if ($action === "login") {
     }else if ($action === "usuarios") {
         $mvc_admin = new mvc_controller_administrador();
         $mvc_admin->usuarios();
+    }else if ($action === "permisos") {
+        $mvc_admin = new mvc_controller_administrador();
+        $mvc_admin->permisos();
     }else if ($action === "pdf") {
         $mvc_default->pdf();
     }else if ($action === "documentacion") {
