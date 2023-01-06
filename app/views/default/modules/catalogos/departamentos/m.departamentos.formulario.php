@@ -48,7 +48,7 @@ $oDepartamentos->Informacion();
         <div class="form-group">
             <strong class="">Clave:</strong>
             <div class="form-group">
-                <input type="text" description="Ingrese el nombre" style="text-transform:uppercase;" aria-describedby="" id="clave" required name="clave" value="<?= $oDepartamentos->clave ?>" class="form-control obligado" />
+                <input type="text" description="Ingrese el nombre" style="text-transform:uppercase;" aria-describedby="" id="clave" required name="clave" value="<?= $oDepartamentos->clave ?>" class="form-control obligado" onkeypress="return soloLetras(event)"  />
             </div>
         </div>
         <input type="hidden" id="id" name="id" value="<?= $oDepartamentos->id ?>" />

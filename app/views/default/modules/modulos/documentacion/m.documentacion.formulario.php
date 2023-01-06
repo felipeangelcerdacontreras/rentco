@@ -67,6 +67,8 @@ $lstpuestos = $oPuestos->Listado();
 
 $aPuestos = empty($oDocumentacion->id_puesto) ? array() : explode("@", $oDocumentacion->id_puesto);
 
+
+
 $parentecis = array("(", ")");
 $remove = str_replace($parentecis, "", $oDocumentacion->permisos);
 
@@ -421,10 +423,16 @@ if ($nombre == "Actualizar") {
                     <div class="form-group">
                         <strong class="">Area/departamento:</strong>
                         <div class="form-group">
-                            <select id="id_departamento" description="Seleccione el departamento" class="form-control obligado change" onChange="changeDepartamento" name="id_departamento">
+                            <select id="id_departamento" description="Seleccione el departamento" class="form-control obligado change" onChange="changeDepartamento" name="id_departamento"  >
                                 <?php
                                 if (count($lstDepartamentos) > 0) {
                                     echo "<option value='0' >-- SELECCIONE --</option>\n";
+                                    
+                                    if ('T' == $oDocumentacion->id_departamento) {
+                                        echo "<option value='T' selected>-- TODOS --</option>\n";
+                                    } else {
+                                        echo "<option value='T' >-- TODOS --</option>\n";
+                                    }
                                     foreach ($lstDepartamentos as $idx => $campo) {
                                         if ($campo->id == $oDocumentacion->id_departamento) {
                                             echo "<option value='{$campo->id}' selected>{$campo->nombre}</option>\n";

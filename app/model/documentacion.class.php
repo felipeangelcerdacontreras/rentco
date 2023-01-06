@@ -53,7 +53,7 @@ class documentacion extends AW
     public function SubQuery() {
         $id_departamento = "";
         if (!empty($this->id_departamento)) {
-            $id_departamento = " and a.id_departamento = '{$this->id_departamento}'";
+            $id_departamento = " and a.id_departamento like '%{$this->id_departamento}%' OR a.id_departamento = 'T'";
         }
 
         $sql = "SELECT max(a.id) as id_documento from documentacion as a 
@@ -109,7 +109,7 @@ class documentacion extends AW
         }
 
         $sql = "SELECT a.id,a.fecha_creacion, a.fecha_actualizacion, b.nombre as estatus_nombre, c.nombre as proceso, 
-        d.nombre as tipo_documento, e.nombre as departamento, a.clave_calidad, a.nombre, a.url_word,a.url_pdf, a.id_puesto, a.permisos FROM documentacion as a
+        d.nombre as tipo_documento, e.nombre as departamento,a.id_departamento, a.clave_calidad, a.nombre, a.url_word,a.url_pdf, a.id_puesto, a.permisos FROM documentacion as a
         left join estatus_documento as b on a.id_estatus = b.id
         left join proceso as c on a.id_proceso = c.id
         left join documento as d on a.id_tipo_documento = d.id
@@ -117,8 +117,9 @@ class documentacion extends AW
         where 1=1
          {$sqlForm} {$fecha_creacion} {$fecha_actualizacion}
          {$id_estatus} {$id_proceso} {$id_tipo_documento} 
-         {$id_departamento} {$clave_calidad} {$nombre}";
-
+         {$id_departamento} {$clave_calidad} {$nombre}
+         or a.id_departamento = 'T'";
+        
         return $this->Query($sql);
     }
 
@@ -177,7 +178,7 @@ class documentacion extends AW
             }
         }
 
-        if (! empty($this->contador)) {
+        /*if (! empty($this->contador)) {
             $sPermisos = "";
             $this->NonQuery("DELETE FROM `documentacion_permisos`
             WHERE id_documento = '{$this->id}';");
@@ -215,7 +216,7 @@ class documentacion extends AW
 
                 //print_r( $id." ".$ver." ".$editar." ".$imprimir." <br />");
             }
-        }
+        }*/
 
         $sql = "UPDATE `mli`.`documentacion`
         SET
@@ -238,8 +239,7 @@ class documentacion extends AW
             $sqlBitacora = "INSERT INTO `bitacora`
                                     (`id`,`modulo`,`operacion`,`modificacion`,`url_pdf`,`url_word`,`usuario`,`fecha`)
                                     VALUES
-                                    ('0','DOCUMENTACION','ACTUALIZACION','(Proceso: {$this->id_proceso}°Tipo documento: {$this->id_tipo_documento}°Departamento: {$this->id_departamento}°Clave calidad: {$this->clave_calidad}°Nombre: {$this->nombre}°Puestos: {$sPuestos}°Comentarios: {$this->comentarios})',NULL,NULL,'{$this->user_id}',NOW())";
-
+                                   ('0','DOCUMENTACION','ACTUALIZACION','(Proceso: {$this->id_proceso}°Tipo documento: {$this->id_tipo_documento}°Departamento: {$this->id_departamento}°Clave calidad: {$this->clave_calidad}°Nombre: {$this->nombre}°Puestos: {$sPuestos}°Comentarios: {$this->comentarios})',NULL,NULL,'{$this->user_id}',NOW())";
             $this->NonQuery($sqlBitacora);
         }
 
@@ -269,7 +269,7 @@ class documentacion extends AW
         VALUES
         (0,'{$this->id_estatus}','{$this->id_proceso}','{$this->id_tipo_documento}','{$this->id_departamento}','{$sPuestos}',
         '{$this->clave_calidad}','{$this->nombre}','{$this->comentarios}','".$this->fecha_creacion."',
-        '{$this->user_id}','1' {$aFecha});";
+        '{$this->user_id}','1' {$aFecha})";
 
         $bResultado = $this->NonQuery($sql);
 
@@ -286,7 +286,7 @@ class documentacion extends AW
 
             $this->id = $res[0]->id;
 
-            if (! empty($this->contador)) {
+            /*if (! empty($this->contador)) {
                 $sPermisos = "";
                 $this->NonQuery("DELETE FROM `documentacion_permisos`
                 WHERE id_documento = '{$this->id}';");
@@ -324,7 +324,7 @@ class documentacion extends AW
     
                     //print_r( $id." ".$ver." ".$editar." ".$imprimir." <br />");
                 }
-            }
+            }*/
         }
 
         return $bResultado;

@@ -33,7 +33,7 @@ $aPermisos = empty($oPermisos->perfiles_id) ? array() : explode("@", $oPermisos-
             scrollY: '350px',
             dom: 'Bfrtip',
             buttons: [
-                <?php if ($oPermisos->ExistePermiso("excel", $aPermisos) === true) { 
+                <?php if ($oPermisos->ExistePermiso("excel", $aPermisos) === true) {
                     echo  "{
                         extend: 'excel',
                         title: 'Reporte de documentación',
@@ -43,8 +43,8 @@ $aPermisos = empty($oPermisos->perfiles_id) ? array() : explode("@", $oPermisos-
                         }
                     },";
                 }
-                if ($oPermisos->ExistePermiso("pdf", $aPermisos) === true) { 
-                   echo "{
+                if ($oPermisos->ExistePermiso("pdf", $aPermisos) === true) {
+                    echo "{
                             extend: 'pdfHtml5',
                             title: 'Reporte de documentación',
                             text: 'Exportar a pdf',
@@ -95,40 +95,46 @@ $aPermisos = empty($oPermisos->perfiles_id) ? array() : explode("@", $oPermisos-
                 <tbody>
                     <?php
                     if (count($lstDocumentacion) > 0) {
-
                         foreach ($lstDocumentacion as $idx => $campo) {
                             if ($sesion->nvl_usuario > 1) {
 
                                 if (count($lstDocDepa) > 0) {
                                     foreach ($lstDocDepa as $idx => $depa) {
                                         if ($campo->id == $depa->id_documento) {
+                                            $aPuestos = empty($campo->id_puesto) ? array() : explode("@", $campo->id_puesto);
+                                            if ($oPermisos->ExistePermiso($sesion->puesto, $aPuestos) === true) {
                     ?>
-                                            <tr>
-                                                <td style="text-align: center;"><?= $campo->fecha_creacion; ?></td>
-                                                <td style="text-align: center;"><?= $campo->fecha_actualizacion ?></td>
-                                                <td style="text-align: center;"><?= $campo->estatus_nombre ?></td>
-                                                <td style="text-align: center;"><?= $campo->proceso ?></td>
-                                                <td style="text-align: center;"><?= $campo->tipo_documento ?></td>
-                                                <td style="text-align: center;"><?= $campo->departamento ?></td>
-                                                <td style="text-align: center;text-transform:uppercase;"><?= $campo->clave_calidad ?></td>
-                                                <td style="text-align: center;"><?= $campo->nombre ?></td>
-                                                <td style="text-align: center;">
-                                                    <?php if ($oPermisos->ExistePermiso("ver", $aPermisos) === true) { ?>
-                                                        <a class="btn btn-outline-sm" style="width:33%" href="javascript:Editar('<?= $campo->url_pdf ?>','Ver')"><img src="app/views/default/img/view.png" data-toggle="tooltip" title="" data-original-title="Ver"> </a>
-                                                    <?php } ?>
-                                                    <?php if ($oPermisos->ExistePermiso("imprimir", $aPermisos) === true) { ?>
-                                                        <a class="btn btn-outline-sm" style="width:25%" href="javascript:Editar('<?= $campo->url_pdf ?>','Imprimir')"><img src="app/views/default/img/printer.png" data-toggle="tooltip" title="" data-original-title="Imprimir" style="width: 80%;height: 80%;"> </a>
-                                                    <?php } ?>
-                                                    <?php if ($oPermisos->ExistePermiso("editar", $aPermisos) === true) { ?>
-                                                        <a class="btn btn-outline-sm" style="width:33%" href="javascript:Editar('<?= $campo->id ?>','Agregar')"><img src="app/views/default/img/edit_22x22.png" data-toggle="tooltip" title="" data-original-title="Editar"></a>
-                                                    <?php } ?>
+                                                <tr>
+                                                    <td style="text-align: center;"><?= $campo->fecha_creacion; ?></td>
+                                                    <td style="text-align: center;"><?= $campo->fecha_actualizacion ?></td>
+                                                    <td style="text-align: center;"><?= $campo->estatus_nombre ?></td>
+                                                    <td style="text-align: center;"><?= $campo->proceso ?></td>
+                                                    <td style="text-align: center;"><?= $campo->tipo_documento ?></td>
+                                                    <td style="text-align: center;"><?php if ($campo->id_departamento == 'T') {
+                                                                                        echo "TODOS";
+                                                                                    } else {
+                                                                                        echo $campo->departamento;
+                                                                                    } ?></td>
+                                                    <td style="text-align: center;text-transform:uppercase;"><?= $campo->clave_calidad ?></td>
+                                                    <td style="text-align: center;"><?= $campo->nombre ?></td>
+                                                    <td style="text-align: center;">
+                                                        <?php if ($oPermisos->ExistePermiso("ver", $aPermisos) === true) { ?>
+                                                            <a class="btn btn-outline-sm" style="width:33%" href="javascript:Editar('<?= $campo->url_pdf ?>','Ver')"><img src="app/views/default/img/view.png" data-toggle="tooltip" title="" data-original-title="Ver"> </a>
+                                                        <?php } ?>
+                                                        <?php if ($oPermisos->ExistePermiso("imprimir", $aPermisos) === true) { ?>
+                                                            <a class="btn btn-outline-sm" style="width:25%" href="javascript:Editar('<?= $campo->url_pdf ?>','Imprimir')"><img src="app/views/default/img/printer.png" data-toggle="tooltip" title="" data-original-title="Imprimir" style="width: 80%;height: 80%;"> </a>
+                                                        <?php } ?>
+                                                        <?php if ($oPermisos->ExistePermiso("editar", $aPermisos) === true) { ?>
+                                                            <a class="btn btn-outline-sm" style="width:33%" href="javascript:Editar('<?= $campo->id ?>','Agregar')"><img src="app/views/default/img/edit_22x22.png" data-toggle="tooltip" title="" data-original-title="Editar"></a>
+                                                        <?php } ?>
 
-                                                    <?php if ($oPermisos->ExistePermiso("actualizar", $aPermisos) === true) { ?>
-                                                        <a class="btn btn-outline-sm" style="width:33%" href="javascript:Editar('<?= $campo->id ?>','Actualizar')"><img src="app/views/default/img/actualizar.png" data-toggle="tooltip" title="" data-original-title="Actualizar"></a>
-                                                    <?php } ?>
-                                                </td>
-                                            </tr>
+                                                        <?php if ($oPermisos->ExistePermiso("actualizar", $aPermisos) === true) { ?>
+                                                            <a class="btn btn-outline-sm" style="width:33%" href="javascript:Editar('<?= $campo->id ?>','Actualizar')"><img src="app/views/default/img/actualizar.png" data-toggle="tooltip" title="" data-original-title="Actualizar"></a>
+                                                        <?php } ?>
+                                                    </td>
+                                                </tr>
                                 <?php
+                                            }
                                         }
                                     }
                                 }
@@ -140,7 +146,11 @@ $aPermisos = empty($oPermisos->perfiles_id) ? array() : explode("@", $oPermisos-
                                     <td style="text-align: center;"><?= $campo->estatus_nombre ?></td>
                                     <td style="text-align: center;"><?= $campo->proceso ?></td>
                                     <td style="text-align: center;"><?= $campo->tipo_documento ?></td>
-                                    <td style="text-align: center;"><?= $campo->departamento ?></td>
+                                    <td style="text-align: center;"><?php if ($campo->id_departamento == 'T') {
+                                                                        echo "TODOS";
+                                                                    } else {
+                                                                        echo $campo->departamento;
+                                                                    } ?></td>
                                     <td style="text-align: center;text-transform:uppercase;"><?= $campo->clave_calidad ?></td>
                                     <td style="text-align: center;"><?= $campo->nombre ?></td>
                                     <td style="text-align: center;">

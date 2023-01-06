@@ -17,7 +17,7 @@ $oEstatus_documento->Informacion();
 ?>
 <script type="text/javascript">
     $(document).ready(function(e) {
-        $("#nameModal").text("<?php echo $nombre ?> Departamento");
+        $("#nameModal").text("<?php echo $nombre ?> Estatus Documento");
         $("#frmFormulario").ajaxForm({
             beforeSubmit: function(formData, jqForm, options) {},
             success: function(data) {
