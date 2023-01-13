@@ -200,6 +200,10 @@ if ($nombre == "Actualizar") {
     function changeDepartamento(datos) {
         if ($("#id_departamento").val() > 0) {
             verInfoDep(<?php echo json_encode($lstDepartamentos); ?>);
+        } else if ($("#id_departamento").val() == "T"){
+            for (i=0; ele = frm.sel.options[i]; i++){
+                ele.selected = true;
+            }
         }
     }
 
@@ -423,11 +427,11 @@ if ($nombre == "Actualizar") {
                     <div class="form-group">
                         <strong class="">Area/departamento:</strong>
                         <div class="form-group">
-                            <select id="id_departamento" description="Seleccione el departamento" class="form-control obligado change" onChange="changeDepartamento" name="id_departamento"  >
+                            <select id="id_departamento" description="Seleccione el departamento" class="form-control obligado change" onChange="changeDepartamento" name="id_departamento">
                                 <?php
                                 if (count($lstDepartamentos) > 0) {
                                     echo "<option value='0' >-- SELECCIONE --</option>\n";
-                                    
+
                                     if ('T' == $oDocumentacion->id_departamento) {
                                         echo "<option value='T' selected>-- TODOS --</option>\n";
                                     } else {
