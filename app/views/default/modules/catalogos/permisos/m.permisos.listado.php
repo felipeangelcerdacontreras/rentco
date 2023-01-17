@@ -7,33 +7,45 @@ session_start();
 
 $_SITE_PATH = $_SERVER["DOCUMENT_ROOT"] . "/" . explode("/", $_SERVER["PHP_SELF"])[1] . "/";
 require_once($_SITE_PATH . "/app/model/permisos.class.php");
+require_once($_SITE_PATH . "/app/model/permisos.class.php");
 
 $oPermisos = new permisos();
+$sesion = $_SESSION[$oPermisos->NombreSesion];
 $lstpermisos = $oPermisos->Listado();
+
+$oPermisos = new permisos();
+$oPermisos->puesto = $sesion->puesto;
+$oPermisos->permisos();
+
+$aPermisos = empty($oPermisos->perfiles_id) ? array() : explode("@", $oPermisos->perfiles_id);
 ?>
 <script type="text/javascript">
     $(document).ready(function(e) {
         $("#dataTable").DataTable({
             scrollY: '300px',
             dom: 'Bfrtip',
-                buttons: [{
-                    extend: 'excel',
-                    title: 'Reporte de permisos',
-                    text: 'Exportar a Excel',
-                    exportOptions: {
-                        columns: [0, 1, 2, 3]
-                    }
-                },
-                    
-                {
-                    extend: 'pdfHtml5', 
-                    title: 'Reporte de permisos',
-                    text: 'Exportar a pdf',
-                    exportOptions: {
-                        columns: [0, 1, 2, 3]
-                    }
-                    
-                }],
+            buttons: [
+                <?php if ($oPermisos->ExistePermiso("excel", $aPermisos) === true) {
+                    echo  "{
+                        extend: 'excel',
+                        title: 'Reporte de documentación',
+                        text: 'Exportar a Excel',
+                        exportOptions: {
+                            columns: [0, 1, 2, 4, 5, 6, 7]
+                        }
+                    },";
+                }
+                if ($oPermisos->ExistePermiso("pdf", $aPermisos) === true) {
+                    echo "{
+                            extend: 'pdfHtml5',
+                            title: 'Reporte de documentación',
+                            text: 'Exportar a pdf',
+                            exportOptions: {
+                                columns: [0, 1, 2, 4, 5, 6, 7]
+                            }
+                        }";
+                } ?>
+            ],
         });
 
         $(".buttons-excel").addClass("btn btn-outline-success");

@@ -87,8 +87,7 @@ class usuarios extends AW {
                 set
                     nombre_usuario = '{$this->nombre_usuario}',
                     correo = '{$this->correo}',
-                    puesto = '{$this->puesto}',
-                    nvl_usuario = '{$this->nvl_usuario}'
+                    puesto = '{$this->puesto}'
                     {$sqlPass}
                 where
                   id='{$this->id}'";

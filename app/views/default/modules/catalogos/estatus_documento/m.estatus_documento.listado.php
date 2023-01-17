@@ -7,38 +7,53 @@ session_start();
 
 $_SITE_PATH = $_SERVER["DOCUMENT_ROOT"] . "/" . explode("/", $_SERVER["PHP_SELF"])[1] . "/";
 require_once($_SITE_PATH . "/app/model/estatus_documento.class.php");
+require_once($_SITE_PATH . "/app/model/permisos.class.php");
 
 $oEstatus_documento = new estatus_documento();
+$sesion = $_SESSION[$oEstatus_documento->NombreSesion];
 $lstEstatus_documento = $oEstatus_documento->Listado();
+
+$oPermisos = new permisos();
+$oPermisos->puesto = $sesion->puesto;
+$oPermisos->permisos();
+
+$aPermisos = empty($oPermisos->perfiles_id) ? array() : explode("@", $oPermisos->perfiles_id);
 ?>
 <script type="text/javascript">
     $(document).ready(function(e) {
         $("#dataTable").DataTable({
             scrollY: '300px',
             dom: 'Bfrtip',
-                buttons: [{
-                    extend: 'excel',
-                    title: 'Reporte de estatus documento',
-                    text: 'Exportar a Excel',
-                    exportOptions: {
-                        columns: [0, 1]
-                    }
-                },
-                    
-                {
-                    extend: 'pdfHtml5', 
-                    title: 'Reporte de estatus documento',
-                    text: 'Exportar a pdf',
-                    exportOptions: {
-                        columns: [0, 1]
-                    }
-                    
-                }],
+            buttons: [
+                <?php if ($oPermisos->ExistePermiso("excel", $aPermisos) === true) {
+                    echo  "{
+                        extend: 'excel',
+                        title: 'Reporte de documentación',
+                        text: 'Exportar a Excel',
+                        exportOptions: {
+                            columns: [0, 1, 2, 4, 5, 6, 7]
+                        }
+                    },";
+                }
+                if ($oPermisos->ExistePermiso("pdf", $aPermisos) === true) {
+                    echo "{
+                            extend: 'pdfHtml5',
+                            title: 'Reporte de documentación',
+                            text: 'Exportar a pdf',
+                            exportOptions: {
+                                columns: [0, 1, 2, 4, 5, 6, 7]
+                            }
+                        }";
+                } ?>
+            ],
         });
 
         $("#btnAgregar").button().click(function(e) {
             Editar("", "Agregar");
         });
+
+        $(".buttons-excel").addClass("btn btn-outline-success");
+        $(".buttons-pdf").addClass("btn btn-outline-danger");
 
         $('[data-toggle="tooltip"]').tooltip();
     });
