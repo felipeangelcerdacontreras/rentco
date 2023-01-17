@@ -31,7 +31,7 @@ $aPermisos = empty($oPermisos->perfiles_id) ? array() : explode("@", $oPermisos-
                         title: 'Reporte de documentación',
                         text: 'Exportar a Excel',
                         exportOptions: {
-                            columns: [0, 1, 2, 4, 5, 6, 7]
+                            columns: [0, 1]
                         }
                     },";
                 }
@@ -41,7 +41,7 @@ $aPermisos = empty($oPermisos->perfiles_id) ? array() : explode("@", $oPermisos-
                             title: 'Reporte de documentación',
                             text: 'Exportar a pdf',
                             exportOptions: {
-                                columns: [0, 1, 2, 4, 5, 6, 7]
+                                columns: [0, 1]
                             }
                         }";
                 } ?>
