@@ -62,7 +62,7 @@ $aPermisos = empty($oPermisos->perfiles_id) ? array() : explode("@", $oPermisos-
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
     <div class="card-header py-3" style="text-align:left">
-        <h5 class="m-0 font-weight-bold text-primary">permisos</h5>
+        <h5 class="m-0 font-weight-bold text-primary">Permisos</h5>
         <div class="form-group" style="text-align:right">
             <input type="button" id="btnAgregar" class="btn btn-outline-primary" name="btnAgregar" value="Agregar nuevo" />
         </div>
@@ -72,8 +72,8 @@ $aPermisos = empty($oPermisos->perfiles_id) ? array() : explode("@", $oPermisos-
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                     <tr>
-                        <th style="text-align: center;">Puesto</th>
-                        <th style="text-align: center;">Departamento</th>
+                        <th style="text-align: center;">Nombre</th>
+                        <th style="text-align: center;">Permisos</th>
                         <th style="width: 10%;">Acciones</th>
                     </tr>
                 </thead>
@@ -83,8 +83,17 @@ $aPermisos = empty($oPermisos->perfiles_id) ? array() : explode("@", $oPermisos-
                         foreach ($lstpermisos as $idx => $campo) {
                     ?>
                             <tr>
-                                <td style="text-align: center;"><?= $campo->puesto ?></td>
-                                <td style="text-align: center;"><?= $campo->departamento ?></td>
+                                <td style="text-align: center;"><?= $campo->nombre ?></td>
+                                <td style="text-align: center;"> <?php 
+                                                    $permisos = explode("@", $campo->perfiles_id);
+                                                    for ($x = 0; $x < count($permisos); $x++) { ?>
+                                                        <?php
+                                                                if ($permisos[$x] != "")
+                                                                 echo "$x.-" ."<strong>".nl2br($permisos[$x])."</strong>";
+                                                                ?>
+                                                    <?php
+                                                    }
+                                                    ?></td>
                                 <td style="text-align: center;">
                                     <a class="btn btn-outline-sm " href="javascript:Editar('<?= $campo->id ?>','Editar')" placeholder="Editar"><img src="app/views/default/img/edit_22x22.png" data-toggle="tooltip" title="" data-original-title="Editar"></a>
                                     <?php if ($campo->estado == 1) { ?>

@@ -48,22 +48,9 @@ $aPermisos = empty($oPermisos->perfiles_id) ? array() : explode("@", $oPermisos-
         <div class="row">
             <div class="col">
                 <div class="form-group">
-                    <strong class="">Puesto:</strong>
+                    <strong class="">Nombre:</strong>
                     <div class="form-group">
-                        <select id="puesto" description="Seleccione el puesto" class="form-control obligado" name="puesto">
-                            <?php
-                            if (count($lstpuestos) > 0) {
-                                echo "<option value='0' >-- SELECCIONE --</option>\n";
-                                foreach ($lstpuestos as $idx => $campo) {
-                                    if ($campo->id == $oPermisos->puesto) {
-                                        echo "<option value='{$campo->id}' selected>{$campo->nombre}</option>\n";
-                                    } else {
-                                        echo "<option value='{$campo->id}' >{$campo->nombre}</option>\n";
-                                    }
-                                }
-                            }
-                            ?>
-                        </select>
+                    <input type="text" description="Ingrese el nombre" aria-describedby="" id="nombre" required name="nombre" value="<?= $oPermisos->nombre ?>" class="form-control obligado" />
                     </div>
                 </div>
             </div>

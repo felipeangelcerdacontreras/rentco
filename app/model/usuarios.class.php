@@ -17,6 +17,7 @@ class usuarios extends AW {
     var $clave_usuario;
     var $clave_texto;
     var $puesto;
+    var $id_permiso;
     var $user_id;
     var $estado;
 
@@ -87,7 +88,8 @@ class usuarios extends AW {
                 set
                     nombre_usuario = '{$this->nombre_usuario}',
                     correo = '{$this->correo}',
-                    puesto = '{$this->puesto}'
+                    puesto = '{$this->puesto}',
+                    id_permiso = '{$this->id_permiso}'
                     {$sqlPass}
                 where
                   id='{$this->id}'";
@@ -98,7 +100,7 @@ class usuarios extends AW {
             $sqlBitacora = "INSERT INTO `mli`.`bitacora`
             (`id`,`modulo`,`operacion`,`modificacion`,`url_pdf`,`url_word`,`usuario`,`fecha`)
             VALUES
-            ('0','USUARIOS','ACTUALIZACION','°Nombre: {$this->nombre_usuario}°Correo: {$this->correo}°Puesto: {$this->puesto}°clave_texto: {$this->clave_usuario})',NULL,NULL,'{$this->user_id}',NOW());";
+            ('0','USUARIOS','ACTUALIZACION','°Nombre: {$this->nombre_usuario}°Correo: {$this->correo}°Puesto: {$this->puesto}°Permiso: {$this->id_permiso}°clave_texto: {$this->clave_usuario})',NULL,NULL,'{$this->user_id}',NOW());";
 
             $this->NonQuery($sqlBitacora);
         }
@@ -110,16 +112,16 @@ class usuarios extends AW {
     public function Agregar() {
 
         $sql = "insert into usuarios
-                (`id`,`nombre_usuario`,`correo`,`clave`,`clave_texto`,`puesto`,`estado`,`usuario_creacion`,`fecha_creacion`)
+                (`id`,`nombre_usuario`,`correo`,`clave`,`clave_texto`,`puesto`,`id_permiso`,`estado`,`usuario_creacion`,`fecha_creacion`)
                 values
-                ('0','{$this->nombre_usuario}','{$this->correo}','{$this->Encripta($this->clave_usuario)}','{$this->clave_usuario}','{$this->puesto}', '1', '{$this->user_id}', now())";
+                ('0','{$this->nombre_usuario}','{$this->correo}','{$this->Encripta($this->clave_usuario)}','{$this->clave_usuario}','{$this->puesto}','{$this->id_permiso}', '1', '{$this->user_id}', now())";
         $bResultado = $this->NonQuery($sql);
 
         if ($bResultado) {
             $sqlBitacora = "INSERT INTO `mli`.`bitacora`
             (`id`,`modulo`,`operacion`,`modificacion`,`url_pdf`,`url_word`,`usuario`,`fecha`)
             VALUES
-            ('0','USUARIOS','AGREGADO','°Nombre: {$this->nombre_usuario}°Correo: {$this->correo}°Puesto: {$this->puesto}°clave_texto: {$this->clave_usuario})',NULL,NULL,'{$this->user_id}',NOW());";
+            ('0','USUARIOS','AGREGADO','°Nombre: {$this->nombre_usuario}°Correo: {$this->correo}°Puesto: {$this->puesto}°Permiso: {$this->id_permiso}°clave_texto: {$this->clave_usuario})',NULL,NULL,'{$this->user_id}',NOW());";
 
             $this->NonQuery($sqlBitacora);
             

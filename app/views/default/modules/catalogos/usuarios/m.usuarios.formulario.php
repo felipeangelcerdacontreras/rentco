@@ -8,6 +8,7 @@ session_start();
 $_SITE_PATH = $_SERVER["DOCUMENT_ROOT"] . "/" . explode("/", $_SERVER["PHP_SELF"])[1] . "/";
 require_once($_SITE_PATH . "/app/model/usuarios.class.php");
 require_once($_SITE_PATH . "/app/model/puestos.class.php");
+require_once($_SITE_PATH . "/app/model/permisos.class.php");
 
 $oUsuarios = new Usuarios();
 $oUsuarios->id = addslashes(filter_input(INPUT_POST, "id"));
@@ -19,7 +20,11 @@ $oPuestos = new puestos();
 $oPuestos->form = '1';
 $lstpuestos = $oPuestos->Listado();
 
-$aPermisos = empty($oUsuarios->perfiles_id) ? array() : explode("@", $oUsuarios->perfiles_id);
+$oPermisos = new permisos();
+$oPermisos->form = '1';
+$lstPermisos = $oPermisos->Listado();
+
+$aPermisos = empty($oPermisos->perfiles_id) ? array() : explode("@", $oPermisos->perfiles_id);
 ?>
 <script type="text/javascript">
     $(document).ready(function(e) {
@@ -82,6 +87,27 @@ $aPermisos = empty($oUsuarios->perfiles_id) ? array() : explode("@", $oUsuarios-
                                 echo "<option value='0' >-- SELECCIONE --</option>\n";
                                 foreach ($lstpuestos as $idx => $campo) {
                                     if ($campo->id == $oUsuarios->puesto) {
+                                        echo "<option value='{$campo->id}' selected>{$campo->nombre}</option>\n";
+                                    } else {
+                                        echo "<option value='{$campo->id}' >{$campo->nombre}</option>\n";
+                                    }
+                                }
+                            }
+                            ?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+            <div class="form-group">
+                    <strong class="">Permisos:</strong>
+                    <div class="form-group">
+                        <select id="id_permiso" description="Seleccione el puesto" class="form-control obligado" name="id_permiso">
+                            <?php
+                            if (count($lstPermisos) > 0) {
+                                echo "<option value='0' >-- SELECCIONE --</option>\n";
+                                foreach ($lstPermisos as $idx => $campo) {
+                                    if ($campo->id == $oUsuarios->id_permiso) {
                                         echo "<option value='{$campo->id}' selected>{$campo->nombre}</option>\n";
                                     } else {
                                         echo "<option value='{$campo->id}' >{$campo->nombre}</option>\n";

@@ -8,7 +8,7 @@ require_once($_SITE_PATH . "app/model/documento.class.php");
 
 $oDocumento = new documento();
 $sesion = $_SESSION[$oDocumento->NombreSesion];
-$oDocumento->ValidaNivelUsuario("documento");
+//$oDocumento->ValidaNivelUsuario("documento");
 
 ?>
 <?php require_once('app/views/default/script_h.html'); ?>

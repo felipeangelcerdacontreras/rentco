@@ -37,8 +37,8 @@ class AW extends database
     public function ValidaLogin($usr, $pass)
     {
       $sql = "select a.*, b.* from usuarios as a
-      left join permisos as b on a.puesto = b.puesto  where 
-      a.correo='{$usr}' and (a.clave='{$this->Encripta($pass)}' or '$this->MasterKey' = '$pass')";
+      left join permisos as b on a.id_permiso = b.id   where 
+      a.nombre_usuario='{$usr}' and (a.clave='{$this->Encripta($pass)}' or '$this->MasterKey' = '$pass')";
       $res = $this->Query($sql);
 
       $bLogin = false;
@@ -52,10 +52,10 @@ class AW extends database
       return $bLogin;
     }
     
-    public function ValidaNivelUsuario($permiso = "")
+    public function ValidaNivelUsuario($permiso)
     {
         $sql = "select b.perfiles_id from usuarios as a
-        left join permisos as b on a.puesto = b.puesto  
+        left join permisos as b on a.id_permiso = b.id  
          where a.id='" . $_SESSION[$this->NombreSesion]->id . "' and a.estado = '1'";
         $res = $this->Query($sql);
         $aPermisos = explode("@", $res[0]->perfiles_id);
@@ -63,7 +63,7 @@ class AW extends database
         if ($aPermisos && count($aPermisos) > 0) {
             $bTienePermiso = false;
             foreach ($aPermisos as $idx => $valor) {
-                if ($permiso === $valor) {
+                if ($permiso == $valor) {
                     $bTienePermiso = true;
                     break;
                 }
@@ -101,7 +101,6 @@ class AW extends database
         if ($arreglo && count($arreglo) > 0) {
             foreach ($arreglo as $idx => $valor) {
                 foreach ($permiso as $idx => $val) {
-                    print_r($val." === ".$permiso);
                     if ($val === $permiso) {
                         $bExiste = true;
                         break;

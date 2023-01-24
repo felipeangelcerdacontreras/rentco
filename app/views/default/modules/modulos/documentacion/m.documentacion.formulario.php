@@ -17,7 +17,7 @@ require_once($_SITE_PATH . "app/model/puestos.class.php");
 
 $oDocumentacion = new documentacion();
 $sesion = $_SESSION[$oDocumentacion->NombreSesion];
-$oDocumentacion->ValidaNivelUsuario("documentacion");
+//$oDocumentacion->ValidaNivelUsuario("documentacion");
 
 $oDocumentacion->id = addslashes(filter_input(INPUT_POST, "id"));
 $nombre = addslashes(filter_input(INPUT_POST, "nombre"));
@@ -181,7 +181,7 @@ if ($nombre == "Actualizar") {
                     }
                     Alert(datos0, datos1 + "" + datos3, datos2);
                     Listado();
-                    $("#myModal_nominas").modal("hide");
+                    $("#myModal").modal("hide");
                 }
             });
         });
@@ -200,10 +200,6 @@ if ($nombre == "Actualizar") {
     function changeDepartamento(datos) {
         if ($("#id_departamento").val() > 0) {
             verInfoDep(<?php echo json_encode($lstDepartamentos); ?>);
-        } else if ($("#id_departamento").val() == "T"){
-            for (i=0; ele = frm.sel.options[i]; i++){
-                ele.selected = true;
-            }
         }
     }
 
@@ -221,15 +217,19 @@ if ($nombre == "Actualizar") {
     function verInfoDep(datos) {
         let n = 0;
         let x = datos.length;
-        while (n < datos.length) {
-            if ($("#id_departamento").val() == datos[n].id) {
-                $("#clave-dep").val(datos[n].clave);
+            while (n < datos.length) {
+                if ($("#id_departamento").val() == datos[n].id) {
+                    $("#clave-dep").val(datos[n].clave);
+                }
+                n++;
             }
-            n++;
-        }
     }
 
     $(".change").change(function() {
+        if ($("#id_departamento").val() == "T") {
+            $("#clave-dep").val("ALL");
+
+        }
         if ($("#clave-doc").val() != "" && $("#clave-dep").val() != "") {
 
             let val = $("#clave-doc").val() + "-" + $("#clave-dep").val();
@@ -351,7 +351,7 @@ if ($nombre == "Actualizar") {
                     <div class="form-group">
                         <strong class="">Fecha de Creación:</strong>
                         <div class="form-group">
-                            <input type="date" aria-describedby="" description="Seleccione fecha de creación" id="fecha_creacion" value="<?= $oDocumentacion->fecha_creacion; ?>" required="" name="fecha_creacion" class="form-control ">
+                            <input type="date" aria-describedby="" description="Seleccione fecha de creación" id="fecha_creacion" value="<?= $oDocumentacion->fecha_creacion; ?>" required="" name="fecha_creacion" class="form-control obligado">
                         </div>
                     </div>
                 </div>

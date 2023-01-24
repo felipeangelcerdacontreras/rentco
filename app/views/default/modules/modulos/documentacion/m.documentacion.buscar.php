@@ -13,7 +13,7 @@ require_once($_SITE_PATH . "app/model/puestos.class.php");
 
 $oDocumentacion = new documentacion();
 $sesion = $_SESSION[$oDocumentacion->NombreSesion];
-$oDocumentacion->ValidaNivelUsuario("documentacion");
+//$oDocumentacion->ValidaNivelUsuario("documentacion");
 
 $oEstatus_documento = new estatus_documento();
 $oEstatus_documento->form = '1';
@@ -86,7 +86,7 @@ $fecha_actual = date("d-m-Y");
                         Alert("", $(elemento).attr("description"), "warning", 900, false);
                         Empty(elemento.id);
                         frmTrue = false;
-                    }  else {
+                    } else {
                         if ($("#fecha_creacion_inicio").val() <= $("#fecha_creacion_fin").val()) {
                             frmTrue = true;
                         } else {
@@ -110,6 +110,9 @@ $fecha_actual = date("d-m-Y");
             if (frmTrue == true) {
                 Listado();
             }
+        });
+        $("#btnAgregar").button().click(function(e) {
+            Editar("", "Agregar");
         });
 
     });
@@ -391,7 +394,11 @@ $fecha_actual = date("d-m-Y");
                                     </div>
                                 </div>
                                 <div class="row" style="justify-content: flex-end;">
-                                    <button class="btn btn-outline-primary" type="button" id="btnBuscar" data-dismiss="modal">Buscar </button>
+                                <?php if ($oPermisos->ExistePermiso("agregar", $aPermisos) === true) {  ?>
+                                        <input type="button" id="btnAgregar" class="btn btn-outline-primary" name="btnAgregar" value="Agregar Nuevo" />
+                                    <?php } ?>&nbsp;
+                                    <button class="btn btn-outline-primary" type="button" id="btnBuscar" data-dismiss="modal">Buscar </button>&nbsp;
+                                    
                                 </div>
                             </div>
                         </center>

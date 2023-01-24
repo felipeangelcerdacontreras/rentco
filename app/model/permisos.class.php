@@ -9,8 +9,8 @@ require_once($_SITE_PATH . "/app/model/principal.class.php");
 class permisos extends AW {
 
     var $id;
+    var $nombre;
     var $nvl_usuario;
-    var $puesto;
     var $user_id;
     var $estado;
 
@@ -33,9 +33,7 @@ class permisos extends AW {
     }
 
     public function Listado() {
-        $sql = "SELECT b.nombre as puesto, c.nombre as departamento, a.estado, a.id  FROM permisos as a
-        left join puestos as b on  a.puesto = b.id
-        left join departamentos as c on b.id_departamento = c.id;  ";
+        $sql = "SELECT * FROM permisos";
         //echo nl2br($sql);
         return $this->Query($sql);
     }
@@ -58,7 +56,7 @@ class permisos extends AW {
 
     public function permisos() {
 
-        $sql = "select * from permisos where  puesto='{$this->puesto}'";
+        $sql = "select * from permisos where  id='{$this->id}'";
         $res = parent::Query($sql);
 
         if (!empty($res) && !($res === NULL)) {
@@ -96,8 +94,8 @@ class permisos extends AW {
         $sql = "update
                     permisos
                 set
+                    nombre = '{$this->nombre}',
                     perfiles_id = '{$sPermisos}',
-                    puesto = '{$this->puesto}',
                     nvl_usuario = '{$this->nvl_usuario}'
                 where
                   id='{$this->id}'";
@@ -105,10 +103,10 @@ class permisos extends AW {
         $bResultado = $this->NonQuery($sql);
 
         if ($bResultado) {
-            $sqlBitacora = "INSERT INTO `mli`.`bitacora`
+            $sqlBitacora = "INSERT INTO `bitacora`
             (`id`,`modulo`,`operacion`,`modificacion`,`url_pdf`,`url_word`,`usuario`,`fecha`)
             VALUES
-            ('0','permisos','ACTUALIZACION','{$sPermisos}°Puesto :{$this->puesto}° Nivel: {$this->nvl_usuario})',NULL,NULL,'{$this->user_id}',NOW());";
+            ('0','permisos','ACTUALIZACION','{$sPermisos}°Nombre:{$this->nombre}° Nivel: {$this->nvl_usuario})',NULL,NULL,'{$this->user_id}',NOW());";
 
             $this->NonQuery($sqlBitacora);
         }
@@ -126,16 +124,16 @@ class permisos extends AW {
         }
 
         $sql = "insert into permisos
-                (`id`,`perfiles_id`,`nvl_usuario`,`puesto`,`estado`,`usuario_creacion`,`fecha_creacion`)
+                (`id`,nombre,`perfiles_id`,`nvl_usuario`,`estado`,`usuario_creacion`,`fecha_creacion`)
                 values
-                ('0','{$sPermisos}','{$this->nvl_usuario}','{$this->puesto}', '1', '{$this->user_id}', now())";
+                ('0','{$this->nombre}','{$sPermisos}','{$this->nvl_usuario}', '1', '{$this->user_id}', now())";
         $bResultado = $this->NonQuery($sql);
 
         if ($bResultado) {
-            $sqlBitacora = "INSERT INTO `mli`.`bitacora`
+            $sqlBitacora = "INSERT INTO `bitacora`
             (`id`,`modulo`,`operacion`,`modificacion`,`url_pdf`,`url_word`,`usuario`,`fecha`)
             VALUES
-            ('0','permisos','AGREGADO','{$sPermisos}°Puesto :{$this->puesto}° Nivel: {$this->nvl_usuario})',NULL,NULL,'{$this->user_id}',NOW());";
+            ('0','permisos','AGREGADO','{$sPermisos}°Nombre:{$this->nombre}° Nivel: {$this->nvl_usuario})',NULL,NULL,'{$this->user_id}',NOW());";
 
             $this->NonQuery($sqlBitacora);
             

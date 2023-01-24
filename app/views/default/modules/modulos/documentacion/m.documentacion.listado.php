@@ -18,7 +18,7 @@ $lstDocDepa = $oDocumentacion->SubQuery();
 //print_r($lstDocumentacion);
 
 $oPermisos = new permisos();
-$oPermisos->puesto = $sesion->puesto;
+$oPermisos->id = $sesion->id_permiso;
 $oPermisos->permisos();
 
 $oDocPermiso = new documentacion_permisos();
@@ -59,10 +59,6 @@ $aPermisos = empty($oPermisos->perfiles_id) ? array() : explode("@", $oPermisos-
         $(".buttons-excel").addClass("btn btn-outline-success");
         $(".buttons-pdf").addClass("btn btn-outline-danger");
 
-        $("#btnAgregar").button().click(function(e) {
-            Editar("", "Agregar");
-        });
-
         $('[data-toggle="tooltip"]').tooltip();
     });
 </script>
@@ -70,11 +66,6 @@ $aPermisos = empty($oPermisos->perfiles_id) ? array() : explode("@", $oPermisos-
 <div class="card shadow mb-4">
     <div class="card-header py-3" style="text-align:left">
         <h5 class="m-0 font-weight-bold text-primary">Documentacion</h5>
-        <div class="form-group" style="text-align:right">
-            <?php if ($oPermisos->ExistePermiso("agregar", $aPermisos) === true) {  ?>
-                <input type="button" id="btnAgregar" class="btn btn-outline-primary" name="btnAgregar" value="Agregar Nuevo" />
-            <?php } ?>
-        </div>
     </div>
     <div class="card-body">
         <div class="table-responsive">

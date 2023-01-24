@@ -121,7 +121,7 @@ $lstpermisos = $oPermisos->Listado();
 
 <head>
     <?php require_once('app/views/default/head.html'); ?>
-    <title>permisos</title>
+    <title>Permisos</title>
 </head>
 
 <body id="page-top">

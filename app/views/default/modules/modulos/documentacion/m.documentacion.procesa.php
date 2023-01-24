@@ -15,17 +15,25 @@ if ($accion == "GUARDAR") {
     $ArchivoW = "";
     $ArchivoP = "";
     $IdDocumento;
+
+    $departamento = filter_input(INPUT_POST, "id_departamento");
+        if ($departamento == "T") {
+            $departamento = "TODOS";
+        } else {
+            $departamento = filter_input(INPUT_POST, "id_departamento");
+        }
+
     if ($oDocumentacion->Guardar() === true) {
         $IdDocumento = $oDocumentacion->id;
         if (isset($_FILES["archivo_word"])) {
-            if ($oDocumentacion->SubirArchivoWord($IdDocumento,$_FILES["archivo_word"], filter_input(INPUT_POST, "id_departamento"), filter_input(INPUT_POST, "clave_calidad"))) {
+            if ($oDocumentacion->SubirArchivoWord($IdDocumento,$_FILES["archivo_word"], $departamento, filter_input(INPUT_POST, "clave_calidad"))) {
                 $ArchivoW = " Archivo word Guardado ";
             }
         } else {
             echo "";
         }
         if (isset($_FILES["archivo_pdf"])) {
-            if ($oDocumentacion->SubirArchivoPdf($IdDocumento,$_FILES["archivo_pdf"], filter_input(INPUT_POST, "id_departamento"), filter_input(INPUT_POST, "clave_calidad"))) {
+            if ($oDocumentacion->SubirArchivoPdf($IdDocumento,$_FILES["archivo_pdf"], $departamento, filter_input(INPUT_POST, "clave_calidad"))) {
                 $ArchivoP = " Archivo Pdf Guardado ";
             }
         } else {

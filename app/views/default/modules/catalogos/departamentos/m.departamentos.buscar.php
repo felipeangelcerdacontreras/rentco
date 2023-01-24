@@ -8,7 +8,7 @@ require_once($_SITE_PATH . "app/model/departamentos.class.php");
 
 $oDepartamentos = new departamentos();
 $sesion = $_SESSION[$oDepartamentos->NombreSesion];
-$oDepartamentos->ValidaNivelUsuario("departamentos");
+//$oDepartamentos->ValidaNivelUsuario("departamentos");
 
 ?>
 <?php require_once('app/views/default/script_h.html'); ?>

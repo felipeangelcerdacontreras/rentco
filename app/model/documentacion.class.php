@@ -377,19 +377,27 @@ class documentacion extends AW
     }
 
     public function SubirArchivoWord($documento,$archivo, $id_departamento, $clave_calidad)
-    {
+    {   
         $sql = "select nombre from departamentos where id='{$id_departamento}'";
         $res = $this->Query($sql);
+        $nombre = "";
+        if (count($res) > 0){
+            $nombre = $res[0]->nombre;
+        } else {
+            if ($id_departamento == "TODOS"){
+                $nombre = "TODOS";
+            }
+        }
 
-        if ($res[0]->nombre != "") {
+        if ($nombre != "") {
             
             $bResultado = false;
             $dirFotos = $this->RutaAbsoluta . "word/";
             @mkdir($dirFotos);
-            $dirFotos .= "{$res[0]->nombre}/";
+            $dirFotos .= "{$nombre}/";
             @mkdir($dirFotos);
 
-            $archivoDir = "word/{$res[0]->nombre}/";
+            $archivoDir = "word/{$nombre}/";
 
             if ($archivo['error'] == 0) { // si se subió el archivo
 
@@ -429,16 +437,26 @@ class documentacion extends AW
     {   
         $sql = "select nombre from departamentos where id='{$id_departamento}'";
         $res = $this->Query($sql);
+        $nombre = "";
+        if (count($res) > 0){
+            $nombre = $res[0]->nombre;
+        } else {
+            if ($id_departamento == "TODOS"){
+                $nombre = "TODOS";
+            }
+        }
 
-        if ($res[0]->nombre != "") {
+        
+
+        if ($nombre != "") {
             
             $bResultado = false;
             $dirFotos = $this->RutaAbsoluta . "pdf/";
             @mkdir($dirFotos);
-            $dirFotos .= "{$res[0]->nombre}/";
+            $dirFotos .= "{$nombre}/";
             @mkdir($dirFotos);
 
-            $archivoDir = "pdf/{$res[0]->nombre}/";
+            $archivoDir = "pdf/{$nombre}/";
 
             if ($archivo['error'] == 0) { // si se subió el archivo
 
@@ -449,7 +467,7 @@ class documentacion extends AW
                     return 2;
                 }
 
-                $nomArchivo = $clave_calidad.date('Y-m-d  H:m');
+                $nomArchivo = $clave_calidad.date('Y-m-d-H-m');
                 $nomArchivo .= ".";
                 $nomArchivo .= $extArchivo;
                 $archivoDir .= $nomArchivo;

@@ -10,7 +10,7 @@ require_once($_SITE_PATH . "app/model/documentacion.class.php");
 
 $oDocumentacion = new documentacion();
 $sesion = $_SESSION[$oDocumentacion->NombreSesion];
-$oDocumentacion->ValidaNivelUsuario("documentacion");
+//$oDocumentacion->ValidaNivelUsuario("documentacion");
 
 $oDocumentacion->id = addslashes(filter_input(INPUT_POST, "id"));
 $nombre = addslashes(filter_input(INPUT_POST, "nombre"));

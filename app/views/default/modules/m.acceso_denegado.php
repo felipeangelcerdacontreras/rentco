@@ -7,7 +7,7 @@ $_SITE_HTTP = "http://" . $_SERVER["SERVER_NAME"] . "/" . explode("/", $_SERVER[
 <?php require_once('app/views/default/script_h.html'); ?>
 <!DOCTYPE html PUBLIC>
 <html>
-<title>Avaluos</title>
+<title>Rentco</title>
 <?php require_once('app/views/default/link.html'); ?>
 <?php require_once('app/views/default/head.html'); ?>
 <!-- aqui empieza plantilla-->

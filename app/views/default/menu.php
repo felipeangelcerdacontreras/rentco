@@ -7,13 +7,14 @@ require_once($_SITE_PATH . "/app/model/permisos.class.php");
 $oConfig = new Configuracion();
 
 $sesion = $_SESSION[$oConfig->NombreSesion];
-//print_r($sesion);
+
 $oUsuario = new usuarios();
 $oUsuario->id = $sesion->id;
 $oUsuario->Informacion();
+//print_r($oUsuario);
 
 $oPermisos = new permisos();
-$oPermisos->puesto = $sesion->puesto;
+$oPermisos->id = $sesion->id_permiso;
 $oPermisos->permisos();
 
 $aPermisos = empty($oPermisos->perfiles_id) ? array() : explode("@", $oPermisos->perfiles_id);
