@@ -61,5 +61,13 @@ if ($accion == "GUARDAR") {
     }else{
         echo "Sistema@Ha ocurrido un error al quitar el documento, vuelva a intentarlo o consulte con su administrador del sistema.@error@";
      }
+} else if ($accion == "Eliminar") {
+    $oDocumentacion = new documentacion(true, $_POST);
+    $oDocumentacion->id = addslashes(filter_input(INPUT_POST, "id"));
+    if ($oDocumentacion->Eliminar() === true) {
+        echo "Sistema@Se ha quitado el documento@success";
+    }else{
+        echo "Sistema@Ha ocurrido un error al quitar el documento, vuelva a intentarlo o consulte con su administrador del sistema.@error@";
+     }
 }
  

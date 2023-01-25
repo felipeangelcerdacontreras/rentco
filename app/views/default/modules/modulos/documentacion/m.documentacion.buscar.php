@@ -13,7 +13,8 @@ require_once($_SITE_PATH . "app/model/puestos.class.php");
 
 $oDocumentacion = new documentacion();
 $sesion = $_SESSION[$oDocumentacion->NombreSesion];
-//$oDocumentacion->ValidaNivelUsuario("documentacion");
+$oDocumentacion->ValidaNivelUsuario("documentacion");
+print_r($oDocumentacion);
 
 $oEstatus_documento = new estatus_documento();
 $oEstatus_documento->form = '1';
@@ -224,6 +225,21 @@ $fecha_actual = date("d-m-Y");
                 $("#myModal").modal({
                     backdrop: "true"
                 });
+                break;
+            case 'Eliminar':
+                //$("#btnGuardar").hide();
+                $.ajax({
+                    data: "accion=" + nombre + "&id=" + id,
+                    type: "POST",
+                    url: "app/views/default/modules/modulos/documentacion/m.documentacion.procesa.php",
+                    beforeSend: function() {
+                    },
+                    success: function(datos) {
+                        //$("#divFormulario").html(datos);
+                        Listado();
+                    }
+                });
+                
                 break;
         }
     }

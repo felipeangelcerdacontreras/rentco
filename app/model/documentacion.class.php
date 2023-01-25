@@ -246,6 +246,24 @@ class documentacion extends AW
         return $bResultado;
     }
 
+    public function Eliminar()
+    {
+        $sql = "DELETE FROM `documentacion` 
+        WHERE `id` = '{$this->id}'";
+        //print_r($sql);
+        $bResultado = $this->NonQuery($sql);
+
+        if ($bResultado) {
+            $sqlBitacora = "INSERT INTO `bitacora`
+                                    (`id`,`modulo`,`operacion`,`modificacion`,`url_pdf`,`url_word`,`usuario`,`fecha`)
+                                    VALUES
+                                   ('0','DOCUMENTACION','ELIMINACION','',NULL,NULL,'{$this->user_id}',NOW())";
+            $this->NonQuery($sqlBitacora);
+        }
+
+        return $bResultado;
+    }
+
     public function Agregar()
     {   
         $sPuestos = "";

@@ -57,6 +57,7 @@ class AW extends database
         $sql = "select b.perfiles_id from usuarios as a
         left join permisos as b on a.id_permiso = b.id  
          where a.id='" . $_SESSION[$this->NombreSesion]->id . "' and a.estado = '1'";
+         print_r($sql);
         $res = $this->Query($sql);
         $aPermisos = explode("@", $res[0]->perfiles_id);
 

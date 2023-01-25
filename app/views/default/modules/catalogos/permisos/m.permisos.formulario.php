@@ -79,6 +79,7 @@ $aPermisos = empty($oPermisos->perfiles_id) ? array() : explode("@", $oPermisos-
                     <input type="checkbox" name="perfiles_id[]" value="imprimir" <?php if ($oPermisos->ExistePermiso("imprimir", $aPermisos) === true) echo "checked" ?>><strong> Imprimir</strong><br>
                     <input type="checkbox" name="perfiles_id[]" value="agregar" <?php if ($oPermisos->ExistePermiso("agregar", $aPermisos) === true) echo "checked" ?>><strong> Agregar</strong><br>
                     <input type="checkbox" name="perfiles_id[]" value="actualizar" <?php if ($oPermisos->ExistePermiso("actualizar", $aPermisos) === true) echo "checked" ?>><strong> Actualizar</strong><br>
+                    <input type="checkbox" name="perfiles_id[]" value="eliminar" <?php if ($oPermisos->ExistePermiso("eliminar", $aPermisos) === true) echo "checked" ?>><strong> Eliminar</strong><br>
                     <div class="col">
                         <strong class="">Permisos para reportes: </strong><br>
                         <input type="checkbox" name="perfiles_id[]" value="excel" <?php if ($oPermisos->ExistePermiso("excel", $aPermisos) === true) echo "checked" ?>><strong> Excel</strong><br>

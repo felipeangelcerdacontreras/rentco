@@ -122,6 +122,10 @@ $aPermisos = empty($oPermisos->perfiles_id) ? array() : explode("@", $oPermisos-
                                                         <?php if ($oPermisos->ExistePermiso("actualizar", $aPermisos) === true) { ?>
                                                             <a class="btn btn-outline-sm" style="width:33%" href="javascript:Editar('<?= $campo->id ?>','Actualizar')"><img src="app/views/default/img/actualizar.png" data-toggle="tooltip" title="" data-original-title="Actualizar"></a>
                                                         <?php } ?>
+
+                                                        <?php if ($oPermisos->ExistePermiso("eliminar", $aPermisos) === true) { ?>
+                                                            <a class="btn btn-outline-sm" style="width:33%" href="javascript:Editar('<?= $campo->id ?>','Eliminar')"><img src="app/views/default/img/trash.png" data-toggle="tooltip" title="" data-original-title="Eliminar"></a>
+                                                        <?php } ?>
                                                     </td>
                                                 </tr>
                                 <?php
@@ -157,6 +161,10 @@ $aPermisos = empty($oPermisos->perfiles_id) ? array() : explode("@", $oPermisos-
 
                                         <?php if ($oPermisos->ExistePermiso("actualizar", $aPermisos) === true) { ?>
                                             <a class="btn btn-outline-sm" style="width:33%" href="javascript:Editar('<?= $campo->id ?>','Actualizar')"><img src="app/views/default/img/actualizar.png" data-toggle="tooltip" title="" data-original-title="Actualizar"></a>
+                                        <?php } ?>
+
+                                        <?php if ($oPermisos->ExistePermiso("eliminar", $aPermisos) === true) { ?>
+                                            <a class="btn btn-outline-sm" style="width:33%" href="javascript:Editar('<?= $campo->id ?>','Eliminar')"><img src="app/views/default/img/trash.png" data-toggle="tooltip" title="" data-original-title="Eliminar"></a>
                                         <?php } ?>
                                     </td>
                                 </tr>
