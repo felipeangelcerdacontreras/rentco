@@ -8,6 +8,7 @@ session_start();
 $_SITE_PATH = $_SERVER["DOCUMENT_ROOT"] . "/" . explode("/", $_SERVER["PHP_SELF"])[1] . "/";
 require_once($_SITE_PATH . "app/model/bitacora.class.php");
 require_once($_SITE_PATH . "/app/model/usuarios.class.php");
+require_once($_SITE_PATH . "/app/model/permisos.class.php");
 
 $oBitacora = new bitacora(true, $_POST);
 $sesion = $_SESSION[$oBitacora->NombreSesion];
@@ -16,6 +17,10 @@ $lstbitacora = $oBitacora->Listado();
 $oUsuarios = new Usuarios();
 $oUsuarios->id = $sesion->id;
 $oUsuarios->Informacion();
+
+$oPermisos = new permisos();
+$oPermisos->id = $sesion->id_permiso;
+$oPermisos->permisos();
 
 $aPermisos = empty($oUsuarios->perfiles_id) ? array() : explode("@", $oUsuarios->perfiles_id);
 ?>

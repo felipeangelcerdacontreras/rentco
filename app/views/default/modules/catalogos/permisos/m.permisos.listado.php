@@ -14,7 +14,7 @@ $sesion = $_SESSION[$oPermisos->NombreSesion];
 $lstpermisos = $oPermisos->Listado();
 
 $oPermisos = new permisos();
-$oPermisos->puesto = $sesion->puesto;
+$oPermisos->id = $sesion->id_permiso;
 $oPermisos->permisos();
 
 $aPermisos = empty($oPermisos->perfiles_id) ? array() : explode("@", $oPermisos->perfiles_id);

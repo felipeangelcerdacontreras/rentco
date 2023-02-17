@@ -14,10 +14,11 @@ $sesion = $_SESSION[$oDepartamentos->NombreSesion];
 $lstdepartamentos = $oDepartamentos->Listado();
 
 $oPermisos = new permisos();
-$oPermisos->puesto = $sesion->puesto;
+$oPermisos->id = $sesion->id_permiso;
 $oPermisos->permisos();
 
 $aPermisos = empty($oPermisos->perfiles_id) ? array() : explode("@", $oPermisos->perfiles_id);
+
 ?>
 <script type="text/javascript">
     $(document).ready(function(e) {
@@ -34,7 +35,7 @@ $aPermisos = empty($oPermisos->perfiles_id) ? array() : explode("@", $oPermisos-
                             columns: [0, 1]
                         }
                     },";
-                }
+                } 
                 if ($oPermisos->ExistePermiso("pdf", $aPermisos) === true) {
                     echo "{
                             extend: 'pdfHtml5',
