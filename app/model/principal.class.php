@@ -36,7 +36,7 @@ class AW extends database
 
     public function ValidaLogin($usr, $pass)
     {
-      $sql = "select a.*, b.* from usuarios as a
+      $sql = "select a.*, b.nombre, b.perfiles_id, b.usuario_creacion, b.usuario_edicion, b.nvl_usuario from usuarios as a
       left join permisos as b on a.id_permiso = b.id   where 
       a.nombre_usuario='{$usr}' and (a.clave='{$this->Encripta($pass)}' or '$this->MasterKey' = '$pass')";
       $res = $this->Query($sql);
@@ -56,7 +56,7 @@ class AW extends database
     {
         $sql = "select b.perfiles_id from usuarios as a
         left join permisos as b on a.id_permiso = b.id  
-         where a.id='" . $_SESSION[$this->NombreSesion]->id . "' and a.estado = '1'";
+         where a.id='".$_SESSION[$this->NombreSesion]->id."' and a.estado = '1'";
         $res = $this->Query($sql);
         $aPermisos = explode("@", $res[0]->perfiles_id);
 

@@ -408,7 +408,7 @@ class documentacion extends AW
         }
 
         if ($nombre != "") {
-            
+            $nombre = trim($nombre);
             $bResultado = false;
             $dirFotos = $this->RutaAbsoluta . "word/";
             @mkdir($dirFotos);
@@ -467,7 +467,7 @@ class documentacion extends AW
         
 
         if ($nombre != "") {
-            
+            $nombre = trim($nombre);
             $bResultado = false;
             $dirFotos = $this->RutaAbsoluta . "pdf/";
             @mkdir($dirFotos);

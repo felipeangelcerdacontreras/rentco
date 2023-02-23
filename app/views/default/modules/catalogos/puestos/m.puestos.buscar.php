@@ -8,7 +8,7 @@ require_once($_SITE_PATH . "app/model/puestos.class.php");
 
 $oPuestos = new puestos();
 $sesion = $_SESSION[$oPuestos->NombreSesion];
-//$oPuestos->ValidaNivelUsuario("puestos");
+$oPuestos->ValidaNivelUsuario("puestos");
 
 ?>
 <?php require_once('app/views/default/script_h.html'); ?>

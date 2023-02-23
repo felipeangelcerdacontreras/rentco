@@ -8,7 +8,7 @@ require_once($_SITE_PATH . "app/model/proceso.class.php");
 
 $oProceso = new proceso();
 $sesion = $_SESSION[$oProceso->NombreSesion];
-//$oProceso->ValidaNivelUsuario("proceso");
+$oProceso->ValidaNivelUsuario("proceso");
 
 ?>
 <?php require_once('app/views/default/script_h.html'); ?>

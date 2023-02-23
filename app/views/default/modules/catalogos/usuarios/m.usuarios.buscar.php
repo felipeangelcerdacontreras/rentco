@@ -8,7 +8,7 @@ require_once($_SITE_PATH . "/app/model/usuarios.class.php");
 
 $oUsuarios = new Usuarios();
 $sesion = $_SESSION[$oUsuarios->NombreSesion];
-//$oUsuarios->ValidaNivelUsuario("usuarios");
+$oUsuarios->ValidaNivelUsuario("usuarios");
 $lstUsuarios = $oUsuarios->Listado();
 
 

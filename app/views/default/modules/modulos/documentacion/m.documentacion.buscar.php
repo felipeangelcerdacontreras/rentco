@@ -13,7 +13,7 @@ require_once($_SITE_PATH . "app/model/puestos.class.php");
 
 $oDocumentacion = new documentacion();
 $sesion = $_SESSION[$oDocumentacion->NombreSesion];
-//$oDocumentacion->ValidaNivelUsuario("documentacion");
+$oDocumentacion->ValidaNivelUsuario("documentacion");
 
 $oEstatus_documento = new estatus_documento();
 $oEstatus_documento->form = '1';

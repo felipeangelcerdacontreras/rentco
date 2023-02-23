@@ -8,7 +8,7 @@ require_once($_SITE_PATH . "/app/model/permisos.class.php");
 
 $oPermisos = new permisos();
 $sesion = $_SESSION[$oPermisos->NombreSesion];
-//$oPermisos->ValidaNivelUsuario("permisos");
+$oPermisos->ValidaNivelUsuario("permisos");
 $lstpermisos = $oPermisos->Listado();
 
 
