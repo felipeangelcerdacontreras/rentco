@@ -355,6 +355,14 @@ if ($nombre == "Actualizar") {
                         </div>
                     </div>
                 </div>
+                <div class="col">
+                    <div class="form-group">
+                        <strong class="">Fecha de Actualización:</strong>
+                        <div class="form-group">
+                            <input type="date" aria-describedby="" description="Seleccione fecha de actualizacion" id="fecha_actualizacion" value="<?= $oDocumentacion->fecha_actualizacion; ?>" required="" name="fecha_actualizacion" class="form-control ">
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="row">
                 <div class="col">
@@ -535,7 +543,7 @@ if ($nombre == "Actualizar") {
         <input type="hidden" id="user_id" name="user_id" value="<?= $sesion->id ?>">
         <input type="hidden" id="url_word" name="url_word" value="<?= $oDocumentacion->url_word ?>" />
         <input type="hidden" id="url_pdf" name="url_pdf" value="<?= $oDocumentacion->url_pdf ?>" />
-        <input type="hidden" id="fecha_actualizacion" name="fecha_actualizacion" value="<?= $oDocumentacion->fecha_actualizacion ?>" />
+        
         <input type="hidden" id="clave-doc" name="clave-doc" value="" />
         <input type="hidden" id="clave-dep" name="clave-dep" value="" />
         <input type="hidden" id="accion" name="accion" value="GUARDAR" />

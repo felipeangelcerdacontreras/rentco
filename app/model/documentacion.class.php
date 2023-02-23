@@ -229,10 +229,10 @@ class documentacion extends AW
         `clave_calidad` = '{$this->clave_calidad}',
         `nombre` = '{$this->nombre}',
         `comentarios` = '{$this->comentarios}',
-        `fecha_actualizacion` = now(),
+        `fecha_actualizacion` = '{$this->fecha_actualizacion}',
         `usr_modificacion` = '{$this->user_id}'
         WHERE `id` = '{$this->id}'";
-        //print_r($sql);
+        print_r($sql);
         $bResultado = $this->NonQuery($sql);
 
         if ($bResultado) {
@@ -277,7 +277,7 @@ class documentacion extends AW
         $aFecha = "";
         if (! empty($this->fecha_actualizacion)) {
             $sFecha = ",`fecha_actualizacion`";
-            $aFecha = ",'".$this->fecha_creacion."'";
+            $aFecha = ",'".$this->fecha_actualizacion."'";
         }
 
 
