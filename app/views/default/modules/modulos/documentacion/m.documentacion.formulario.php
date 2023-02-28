@@ -244,16 +244,19 @@ if ($nombre == "Actualizar") {
                 url: "app/views/default/modules/modulos/documentacion/m.documentacion.procesa.php",
                 beforeSend: function() {},
                 success: function(data) {
-                    console.log(data.length);
-                    if (data.length == 1) {
-                        data = "-00" + (parseFloat(data) + 1);
-                    } else if (data.length == 2) {
-                        data = "-0" + (parseFloat(data) + 1);
-                    } else if (data.length == 3) {
-                        data = "-" + (parseFloat(data) + 1);
+                    
+                    calculo = (parseFloat(data) + 1);
+                    nuevo = 0;
+
+                    if (calculo > 0 && calculo < 10) {
+                        nuevo = "-00" + (parseFloat(data) + 1);
+                    } else if (calculo >= 10 && calculo < 100) {
+                        nuevo = "-0" + (parseFloat(data) + 1);
+                    } else if (calculo >= 100 && calculo < 1000) {
+                        nuevo = "-" + (parseFloat(data) + 1);
                     }
 
-                    $("#clave_calidad").val(val + data);
+                    $("#clave_calidad").val(val + nuevo);
                 }
             });
         }
