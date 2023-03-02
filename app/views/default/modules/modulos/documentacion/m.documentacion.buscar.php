@@ -373,13 +373,11 @@ $fecha_actual = date("d-m-Y");
                                                 <select id="id_departamento_" description="Seleccione el puesto" class="form-control" name="id_departamento_">
                                                     <?php
                                                     if (count($lstDepartamentos) > 0) {
-                                                        if ($sesion->nvl_usuario <= 1) {
                                                             echo "<option value='0' >-- SELECCIONE --</option>\n";
-                                                        }
                                                         foreach ($lstDepartamentos as $idx => $campo) {
                                                             if ($sesion->nvl_usuario > 1) {
                                                                 if ($campo->id == $lstPuestos[0]->id_departamento) {
-                                                                    echo "<option value='{$campo->id}' selected>{$campo->nombre}</option>\n";
+                                                                    echo "<option value='{$campo->id}' >{$campo->nombre}</option>\n";
                                                                 }
                                                             } else {
                                                                 echo "<option value='{$campo->id}' >{$campo->nombre}</option>\n";
