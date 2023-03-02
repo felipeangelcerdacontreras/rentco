@@ -232,7 +232,7 @@ class documentacion extends AW
         `fecha_actualizacion` = '{$this->fecha_actualizacion}',
         `usr_modificacion` = '{$this->user_id}'
         WHERE `id` = '{$this->id}'";
-        print_r($sql);
+        //print_r($sql);
         $bResultado = $this->NonQuery($sql);
 
         if ($bResultado) {
