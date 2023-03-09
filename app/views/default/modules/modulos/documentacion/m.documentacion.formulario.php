@@ -442,12 +442,6 @@ if ($nombre == "Actualizar") {
                                 <?php
                                 if (count($lstDepartamentos) > 0) {
                                     echo "<option value='0' >-- SELECCIONE --</option>\n";
-
-                                    if ('T' == $oDocumentacion->id_departamento) {
-                                        echo "<option value='T' selected>-- TODOS --</option>\n";
-                                    } else {
-                                        echo "<option value='T' >-- TODOS --</option>\n";
-                                    }
                                     foreach ($lstDepartamentos as $idx => $campo) {
                                         if ($campo->id == $oDocumentacion->id_departamento) {
                                             echo "<option value='{$campo->id}' selected>{$campo->nombre}</option>\n";
