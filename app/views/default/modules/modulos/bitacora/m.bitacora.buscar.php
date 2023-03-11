@@ -309,9 +309,6 @@ $fecha_actual = date("d-m-Y");
             </div>
             <!-- Modal -->
 
-            <div>
-                <iframe id="iframepdf" src=""></iframe>
-            </div>
 
 
             <!-- archivo Footer -->

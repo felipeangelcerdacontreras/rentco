@@ -22,17 +22,43 @@ $oPermisos = new permisos();
 $oPermisos->id = $sesion->id_permiso;
 $oPermisos->permisos();
 
-$aPermisos = empty($oUsuarios->perfiles_id) ? array() : explode("@", $oUsuarios->perfiles_id);
+$aPermisos = empty($oPermisos->perfiles_id) ? array() : explode("@", $oPermisos->perfiles_id);
 ?>
 <script type="text/javascript">
     $(document).ready(function(e) {
         $("#dataTable").DataTable({
-            scrollY: '300px'
+            scrollY: '300px',
+            dom: 'Bfrtip',
+            buttons: [
+                <?php if ($oPermisos->ExistePermiso("excel", $aPermisos) === true) {
+                    echo  "{
+                        extend: 'excel',
+                        title: 'Reporte de documentación',
+                        text: 'Exportar a Excel',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                        }
+                    },";
+                }
+                if ($oPermisos->ExistePermiso("pdf", $aPermisos) === true) {
+                    echo "{
+                            extend: 'pdfHtml5',
+                            title: 'Reporte de documentación',
+                            text: 'Exportar a pdf',
+                            exportOptions: {
+                                columns: [0, 1, 2, 3, 5, 6, 7]
+                            }
+                        }";
+                } ?>
+            ],
         });
 
         $("#btnAgregar").button().click(function(e) {
             Editar("", "Agregar");
         });
+
+        $(".buttons-excel").addClass("btn btn-outline-success");
+        $(".buttons-pdf").addClass("btn btn-outline-danger");
 
         $('[data-toggle="tooltip"]').tooltip();
     });
